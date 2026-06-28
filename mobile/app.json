@@ -1,0 +1,30 @@
+{
+  "expo": {
+    "name": "VoiceShield AI",
+    "slug": "voiceshield-ai",
+    "scheme": "voiceshieldai",
+    "orientation": "portrait",
+    "platforms": ["android", "ios", "web"],
+    "plugins": [
+      [
+        "expo-audio",
+        {
+          "microphonePermission": "VoiceShield AI necesita acceso al micrófono para grabar y analizar audio."
+        }
+      ],
+      [
+        "expo-document-picker",
+        {
+          "iCloudContainerEnvironment": "Production"
+        }
+      ]
+    ],
+    "android": {
+      "package": "com.voiceshieldai.app"
+    },
+    "ios": {
+      "bundleIdentifier": "com.voiceshieldai.app",
+      "supportsTablet": true
+    }
+  }
+}
