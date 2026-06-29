@@ -1,11 +1,16 @@
 from __future__ import annotations
 
+import os
 from fastapi import FastAPI, File, HTTPException, UploadFile
 from fastapi.middleware.cors import CORSMiddleware
+from dotenv import load_dotenv
 
-from hf_analyzer import AnalysisResult, HuggingFaceVoiceAnalyzer
+# Cargar las credenciales del archivo .env antes de inicializar cualquier componente
+load_dotenv()
 
-app = FastAPI(title="VoiceShield AI API", version="1.0.0")
+from gemini_analyzer import AnalysisResult, GeminiVoiceAnalyzer
+
+app = FastAPI(title="VoiceShield AI API (Gemini Powered)", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -15,7 +20,8 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-analyzer = HuggingFaceVoiceAnalyzer()
+# Inicializa el nuevo analizador basado en la nube
+analyzer = GeminiVoiceAnalyzer()
 
 
 @app.get("/health")
@@ -31,10 +37,12 @@ async def analyze_audio(file: UploadFile = File(...)) -> dict[str, object]:
         raise HTTPException(status_code=400, detail="No se recibió contenido de audio.")
 
     try:
+        # Llama a la lógica de Gemini pasándole los bytes limpios
         result: AnalysisResult = analyzer.analyze(audio_bytes, file.content_type)
     except ValueError as exc:
         raise HTTPException(status_code=400, detail=str(exc)) from exc
 
+    # Estructura devuelta exactamente idéntica a la que el frontend espera mapear
     return {
         "human_probability": result.human_probability,
         "ai_probability": result.ai_probability,
