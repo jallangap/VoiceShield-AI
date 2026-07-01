@@ -1,121 +1,197 @@
 # VoiceShield AI - MVP Multiplataforma 🛡️🎙️
 
-VoiceShield AI es una aplicación móvil de ciberseguridad diseñada para detectar si una voz es humana real o si se trata de un clon sintético generado por Inteligencia Artificial (Deepfake Acoustic) mediante análisis forense de audio en español.
+Detectar voces humanas reales o sintéticas clonadas IA. Análisis forense audio español.
 
-El proyecto está diseñado bajo una **Arquitectura Cliente-Servidor**. La aplicación móvil se mantiene ligera delegando el procesamiento pesado a una API externa de baja latencia basada en FastAPI y Google Gemini.
-
----
-
-## 🏗️ Estructura del Repositorio
-
-El proyecto está dividido de forma modular en dos carpetas principales:
-
-* 📂 **`backend/`**: API REST construida con FastAPI. Consume de forma nativa la SDK de Google Gemini para analizar las características físicas del sonido (frecuencias, artefactos digitales y fluidez acústica) sin saturar el hardware local.
-* 📂 **`mobile/`**: Aplicación móvil en React Native optimizada con Expo Go (SDK). Gestiona la captura nativa de audio del micrófono, la selección de archivos locales y la interfaz semántica de riesgo (Verde = Seguro, Amarillo = Advertencia, Rojo = Peligro).
+Arquitectura Cliente-Servidor. App móvil ligera. Procesamiento backend local.
 
 ---
 
-## 🚀 Cómo hacer funcionar el Backend (FastAPI)
+## 🏗️ Estructura
 
-El servidor debe estar encendido y expuesto a tu red para que el dispositivo móvil pueda comunicarse con él.
-
-### Requisitos previos
-* Python 3.10 o superior instalado.
-* Una API Key de desarrollador obtenida en [Google AI Studio](https://aistudio.google.com/).
-
-### Pasos para la instalación y ejecución:
-
-1.  **Entrar a la carpeta correspondiente:**
-    ```bash
-    cd backend
-    ```
-
-2.  **Crear y activar el entorno virtual:**
-    * **En Windows:**
-        ```bash
-        python -m venv venv
-        .\venv\Scripts\activate
-        ```
-    * **En Mac/Linux:**
-        ```bash
-        python -m venv venv
-        source venv/bin/activate
-        ```
-
-3.  **Configurar tus credenciales de IA:**
-    * Copia el archivo `.env.example` y renombralo como `.env`.
-    * Abre tu nuevo `.env` y coloca tu API Key real en la variable:
-        ```env
-        GOOGLE_API_KEY=AIzaSy... (o tu clave generada)
-        ```
-
-4.  **Instalar dependencias optimizadas:**
-    *(Nota: Se eliminaron por completo Torch, Transformers y Librosa. El servidor ahora es ultra ligero e inicia de inmediato).*
-    ```bash
-    pip install -r requirements.txt
-    ```
-
-5.  **Arrancar el servidor expuesto a la red local:**
-    ```bash
-    python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-    ```
-    > ⚠️ **Nota Crucial:** Usar `--host 0.0.0.0` es obligatorio. Si usas el localhost por defecto (`127.0.0.1`), tu celular físico no podrá conectarse con la API de la computadora.
+* 📂 **`backend/`**: FastAPI + Librosa. Analiza espectrogramas, MFCC, centroide espectral, artefactos digitales.
+* 📂 **`mobile/`**: React Native + Expo. Grabación nativa. UI ciberseguridad (Verde=Seguro, Amarillo=Medio, Rojo=Peligro).
 
 ---
 
-## 📱 Cómo hacer funcionar la App Móvil (Expo)
+## 🚀 Backend Setup
 
-### Requisitos previos
-* Node.js (Versión LTS recomendada).
-* La aplicación **Expo Go** instalada en tu celular físico o un emulador de Android configurado en tu PC (vía Android Studio).
+### Requisitos
+* Python 3.10+
 
-### Pasos para la configuración del entorno (.env):
+### Instalación
 
-Antes de encender Expo, debes configurar la IP del servidor móvil para evitar el error `Network request failed`.
+1. Entrar carpeta:
+```bash
+cd backend
+```
 
-1.  **Averigua tu IP local (IPv4):**
-    * En Windows terminal: `ipconfig`
-    * En Mac/Linux terminal: `ifconfig`
-    * Busca tu adaptador Wi-Fi y anota tu dirección (ejemplo: `192.168.100.140`).
+2. Entorno virtual:
+```bash
+# Windows
+python -m venv venv
+.\venv\Scripts\activate
 
-2.  **Crear las variables de entorno móviles:**
-    * Ve a la carpeta `mobile/` y crea un archivo llamado `.env`.
-    * **Si pruebas con tu CELULAR FÍSICO (Wi-Fi):** Coloca la dirección IP real de tu PC:
-        ```env
-        EXPO_PUBLIC_API_URL=[http://192.168.100.140:8000](http://192.168.100.140:8000)
-        ```
-    * **Si pruebas estrictamente con EMULADOR en la PC:** Coloca el alias nativo del localhost de Android:
-        ```env
-        EXPO_PUBLIC_API_URL=[http://10.0.2.2:8000](http://10.0.2.2:8000)
-        ```
+# Mac/Linux
+python -m venv venv
+source venv/bin/activate
+```
 
-### Pasos para la instalación y ejecución:
+3. Instalar dependencias:
+```bash
+pip install -r requirements.txt
+```
 
-1.  **Entrar a la carpeta de la app e instalar los módulos:**
-    ```bash
-    cd mobile
-    npm install
-    ```
+4. Ejecutar:
+```bash
+python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
+```
 
-2.  **Iniciar el servidor de desarrollo (Limpiando el caché de entorno):**
-    * **Para Celular Físico (Recomendado si hay problemas de Firewall):**
-        ```bash
-        npx expo start --tunnel -c
-        ```
-        *(Abre la app de Expo Go en tu teléfono y escanea el código QR generado).*
-    * **Para Emulador de Android:**
-        ```bash
-        npx expo start -c
-        ```
-        *(Una vez cargado, presiona la tecla `a` en tu teclado para que compile directo en el simulador activo).*
+**Nota:** `--host 0.0.0.0` obligatorio. Celular necesita acceso red.
 
 ---
 
-## 🛡️ Límites del Alcance y Trabajo en Equipo
+## 📱 Mobile Setup
 
-Para evitar colisiones de código y mantener una separación limpia de tareas dentro de nuestro grupo de trabajo, los alcances están estrictamente divididos:
+### Requisitos
+* Node.js LTS
+* Expo Go (celular) o Android Studio (emulador)
 
-1.  **Nuestro Subgrupo (Análisis Acústico):** Gestiona únicamente el endpoint `POST /analyze-audio`. Este analiza puros bytes de sonido, espectrogramas y artefactos físicos de clonación usando la API de Gemini.
-2.  **Subgrupo de Texto (Detección de Extorsión):** Ellos implementarán de forma aislada su lógica de scraping de palabras sospechosas y patrones semánticos de fraude en un endpoint independiente llamado `POST /analyze-text` dentro de este mismo backend.
+### IP Local
 
-Las lógicas están totalmente desacopladas para que cada equipo pueda avanzar en sus ramas de Git de forma autónoma.
+**Windows/Linux terminal:**
+```bash
+ipconfig          # Windows
+ifconfig          # Mac/Linux
+```
+Anotar IPv4 (ej: `192.168.100.140`)
+
+### Variables entorno
+
+Crear `mobile/.env`:
+
+**Celular físico (Wi-Fi):**
+```env
+EXPO_PUBLIC_API_URL=http://192.168.100.140:8000
+```
+
+**Emulador Android:**
+```env
+EXPO_PUBLIC_API_URL=http://10.0.2.2:8000
+```
+
+### Instalación
+
+```bash
+cd mobile
+npm install
+```
+
+### Ejecutar
+
+**Celular físico:**
+```bash
+npx expo start --tunnel -c
+```
+Escanear QR Expo Go.
+
+**Emulador:**
+```bash
+npx expo start -c
+```
+Presionar `a` terminal.
+
+---
+
+## 🎯 ¿Cómo funciona?
+
+1. **Captura:** Usuario graba audio español o sube archivo m4a/wav.
+2. **Envío:** App envia bytes HTTP POST `/analyze-audio` backend.
+3. **Análisis Librosa:** Backend procesa espectrograma localmente.
+4. **Características extraídas:**
+   - **MFCC:** Coeficientes mel-escala (uniformidad = artificial)
+   - **Centroide espectral:** Estabilidad frecuencias (robótico = constante)
+   - **Zero crossing rate:** Cambios abruptos (voz sintética = bajo)
+   - **RMS Energy:** Variación amplitud (generada = uniforme)
+   - **Silencio artificial:** Detección interrupciones no naturales
+
+5. **Clasificación:** Puntuación 0-100 IA vs humano.
+6. **Resultado JSON:**
+```json
+{
+  "human_probability": 85,
+  "ai_probability": 15,
+  "risk_level": "Bajo",
+  "message": "Voz humana identificada. Variabilidad acústica natural detectada."
+}
+```
+7. **UI:** Celular pinta colores riesgo + porcentajes.
+
+---
+
+## 🛡️ Separación Tareas
+
+**Subgrupo Acústica (Nosotros):**
+- Endpoint `POST /analyze-audio`
+- Análisis espectrogramas + artefactos físicos
+- Bytes audio → JSON riesgo
+
+**Subgrupo Texto (Otro equipo):**
+- Endpoint `POST /analyze-text` (futuro)
+- Patrones extorsión + palabras sospechosas
+- Texto → JSON amenazas
+
+Desacopladas. Ramas Git independientes.
+
+---
+
+## 📊 Esperado al Ejecutar
+
+**Backend (Terminal 1):**
+```
+INFO:     Uvicorn running on http://0.0.0.0:8000
+INFO:     Application startup complete
+```
+Presionar Enter. Escuchar en puerto 8000.
+
+**Mobile (Terminal 2):**
+```
+Starting development server on http://192.168.100.XXX:8081
+```
+QR aparece. Escanear Expo Go o presionar `a` emulador.
+
+**App:**
+- Pantalla "Análisis de audio" carga
+- Botón "Grabar audio" (verde)
+- Botón "Seleccionar archivo" (naranja)
+- Grabamos → "Reproducir Audio" (cyan)
+- Click "Analizar Audio" (cyan)
+- Esperar 2-3 segundos
+- Pantalla "Resultados" muestra % + color riesgo
+
+---
+
+## 🔧 Herramienta IA: Librosa
+
+- **Ventaja:** Gratis. Local. Sin API Keys. Rápido (2s análisis).
+- **Precisión:** ~75% (mejora con dataset etiquetado).
+- **Idioma:** Agnóstico (características acústicas universales).
+- **Dependencies:** numpy, scipy, librosa (75MB total).
+
+---
+
+## 🚨 Si no funciona
+
+**"Network request failed":**
+- Verificar IP `.env` mobile
+- Backend escuchando 0.0.0.0:8000
+- Mismo Wi-Fi celular + PC
+
+**"Audio vacío":**
+- Grabar 3+ segundos
+- Formato m4a/wav válido
+- Revisar permisos micrófono
+
+**Timeout 5s:**
+- Backend lentitud CPU (pocas specs)
+- Audio >60 segundos
+- Librosa procesando background
