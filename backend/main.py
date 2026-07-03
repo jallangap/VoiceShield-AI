@@ -7,12 +7,9 @@ from librosa_analyzer import AnalysisResult, LibrosaVoiceAnalyzer
 
 app = FastAPI(title="VoiceShield AI API (Librosa)", version="3.0.0")
 
-# Corregido: Orígenes CORS explícitos y seguros mapeados según la recomendación de la auditoría
 ALLOWED_ORIGINS = [
     "http://localhost:8081",
-    "http://127.0.0.1:8081",
-    "http://10.0.2.2:8081",   # Emulador Android
-    "http://localhost:19000", # Puerto alternativo Expo
+    "http://127.0.0.1:8081"
 ]
 
 app.add_middleware(
