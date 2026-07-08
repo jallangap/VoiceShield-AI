@@ -1,197 +1,52 @@
-# VoiceShield AI - MVP Multiplataforma 🛡️🎙️
 
-Detectar voces humanas reales o sintéticas clonadas IA. Análisis forense audio español.
-
-Arquitectura Cliente-Servidor. App móvil ligera. Procesamiento backend local.
-
+Readme · MD
+# GuardIAn 🛡️
+ 
+**Herramienta móvil de seguridad forense para la detección de estafas y fraudes mediante análisis de audio.**
+ 
+GuardIAn combina inteligencia artificial, procesamiento de lenguaje natural y análisis acústico para determinar si una llamada o nota de voz es un intento de fraude, suplantación o manipulación psicológica.
+ 
 ---
-
-## 🏗️ Estructura
-
-* 📂 **`backend/`**: FastAPI + Librosa. Analiza espectrogramas, MFCC, centroide espectral, artefactos digitales.
-* 📂 **`mobile/`**: React Native + Expo. Grabación nativa. UI ciberseguridad (Verde=Seguro, Amarillo=Medio, Rojo=Peligro).
-
+ 
+## ✨ Características principales
+ 
+### 🎭 Detección de voces falsas (Deepfake Audio)
+Analiza el archivo de audio mediante modelos de IA para identificar si la voz es humana real o si fue generada/clonada artificialmente.
+ 
+### 🧠 Identificación de engaños psicológicos
+Transcribe el audio utilizando **Whisper** y analiza el contenido textual para detectar:
+- Tácticas de ingeniería social
+- Amenazas o coacción
+- Patrones de manipulación emocional
+### 📊 Análisis estructural del audio
+Evalúa características físicas de la conversación, tales como:
+- Ritmo del habla
+- Cantidad y duración de silencios
+- Duración total del audio
+### ⚠️ Veredicto de riesgo
+Genera un **porcentaje global de peligro** junto con un diagnóstico claro:
+- 🟢 Riesgo bajo
+- 🟡 Riesgo medio
+- 🔴 Riesgo crítico
+Incluye además un **protocolo de recomendaciones** personalizado para ayudar al usuario a evitar caer en la estafa.
+ 
+### 👤 Modos de uso
+- **Usuario registrado:** guarda un historial seguro de todos los análisis realizados.
+- **Modo invitado:** permite realizar un análisis rápido sin necesidad de crear una cuenta.
 ---
-
-## 🚀 Backend Setup
-
-### Requisitos
-* Python 3.10+
-
-### Instalación
-
-1. Entrar carpeta:
-```bash
-cd backend
-```
-
-2. Entorno virtual:
-```bash
-# Windows
-python -m venv venv
-.\venv\Scripts\activate
-
-# Mac/Linux
-python -m venv venv
-source venv/bin/activate
-```
-
-3. Instalar dependencias:
-```bash
-pip install -r requirements.txt
-```
-
-4. Ejecutar:
-```bash
-python -m uvicorn main:app --host 0.0.0.0 --port 8000 --reload
-```
-
-**Nota:** `--host 0.0.0.0` obligatorio. Celular necesita acceso red.
-
+ 
+## 🧩 Flujo de análisis
+ 
+1. El usuario sube o graba un archivo de audio.
+2. GuardIAn transcribe el audio con Whisper.
+3. Se ejecutan en paralelo:
+   - Detección de deepfake de voz
+   - Análisis semántico del texto transcrito
+   - Análisis estructural/acústico del audio
+4. Los resultados se combinan en un veredicto de riesgo global.
+5. Se muestra el diagnóstico junto con recomendaciones de seguridad.
 ---
-
-## 📱 Mobile Setup
-
-### Requisitos
-* Node.js LTS
-* Expo Go (celular) o Android Studio (emulador)
-
-### IP Local
-
-**Windows/Linux terminal:**
-```bash
-ipconfig          # Windows
-ifconfig          # Mac/Linux
-```
-Anotar IPv4 (ej: `192.168.100.140`)
-
-### Variables entorno
-
-Crear `mobile/.env`:
-
-**Celular físico (Wi-Fi):**
-```env
-EXPO_PUBLIC_API_URL=http://192.168.100.140:8000
-```
-
-**Emulador Android:**
-```env
-EXPO_PUBLIC_API_URL=http://10.0.2.2:8000
-```
-
-### Instalación
-
-```bash
-cd mobile
-npm install
-```
-
-### Ejecutar
-
-**Celular físico:**
-```bash
-npx expo start --tunnel -c
-```
-Escanear QR Expo Go.
-
-**Emulador:**
-```bash
-npx expo start -c
-```
-Presionar `a` terminal.
-
----
-
-## 🎯 ¿Cómo funciona?
-
-1. **Captura:** Usuario graba audio español o sube archivo m4a/wav.
-2. **Envío:** App envia bytes HTTP POST `/analyze-audio` backend.
-3. **Análisis Librosa:** Backend procesa espectrograma localmente.
-4. **Características extraídas:**
-   - **MFCC:** Coeficientes mel-escala (uniformidad = artificial)
-   - **Centroide espectral:** Estabilidad frecuencias (robótico = constante)
-   - **Zero crossing rate:** Cambios abruptos (voz sintética = bajo)
-   - **RMS Energy:** Variación amplitud (generada = uniforme)
-   - **Silencio artificial:** Detección interrupciones no naturales
-
-5. **Clasificación:** Puntuación 0-100 IA vs humano.
-6. **Resultado JSON:**
-```json
-{
-  "human_probability": 85,
-  "ai_probability": 15,
-  "risk_level": "Bajo",
-  "message": "Voz humana identificada. Variabilidad acústica natural detectada."
-}
-```
-7. **UI:** Celular pinta colores riesgo + porcentajes.
-
----
-
-## 🛡️ Separación Tareas
-
-**Subgrupo Acústica (Nosotros):**
-- Endpoint `POST /analyze-audio`
-- Análisis espectrogramas + artefactos físicos
-- Bytes audio → JSON riesgo
-
-**Subgrupo Texto (Otro equipo):**
-- Endpoint `POST /analyze-text` (futuro)
-- Patrones extorsión + palabras sospechosas
-- Texto → JSON amenazas
-
-Desacopladas. Ramas Git independientes.
-
----
-
-## 📊 Esperado al Ejecutar
-
-**Backend (Terminal 1):**
-```
-INFO:     Uvicorn running on http://0.0.0.0:8000
-INFO:     Application startup complete
-```
-Presionar Enter. Escuchar en puerto 8000.
-
-**Mobile (Terminal 2):**
-```
-Starting development server on http://192.168.100.XXX:8081
-```
-QR aparece. Escanear Expo Go o presionar `a` emulador.
-
-**App:**
-- Pantalla "Análisis de audio" carga
-- Botón "Grabar audio" (verde)
-- Botón "Seleccionar archivo" (naranja)
-- Grabamos → "Reproducir Audio" (cyan)
-- Click "Analizar Audio" (cyan)
-- Esperar 2-3 segundos
-- Pantalla "Resultados" muestra % + color riesgo
-
----
-
-## 🔧 Herramienta IA: Librosa
-
-- **Ventaja:** Gratis. Local. Sin API Keys. Rápido (2s análisis).
-- **Precisión:** ~75% (mejora con dataset etiquetado).
-- **Idioma:** Agnóstico (características acústicas universales).
-- **Dependencies:** numpy, scipy, librosa (75MB total).
-
----
-
-## 🚨 Si no funciona
-
-**"Network request failed":**
-- Verificar IP `.env` mobile
-- Backend escuchando 0.0.0.0:8000
-- Mismo Wi-Fi celular + PC
-
-**"Audio vacío":**
-- Grabar 3+ segundos
-- Formato m4a/wav válido
-- Revisar permisos micrófono
-
-**Timeout 5s:**
-- Backend lentitud CPU (pocas specs)
-- Audio >60 segundos
-- Librosa procesando background
+ 
+## 🎯 Objetivo
+ 
+Proteger a los usuarios —especialmente a los más vulnerables frente a fraudes telefónicos— brindando una herramienta accesible que combine forense de audio e inteligencia artificial para detectar estafas antes de que ocurran.
