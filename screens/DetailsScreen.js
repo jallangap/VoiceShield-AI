@@ -7,7 +7,11 @@ export default function DetailsScreen({ analysisResult, setCurrentScreen }) {
   const forense = analysisResult?.analisis_forense || {};
   const tacticas = analysisResult?.desglose_tacticas || {};
   const whisperDetalles = analysisResult?.detalles_audio_whisper || {};
-  const recomendaciones = analysisResult?.recomendaciones_seguridad || [];
+  const recomendaciones = Array.isArray(
+    analysisResult?.recomendaciones_seguridad
+  )
+    ? analysisResult.recomendaciones_seguridad
+    : [];
   const analisisSocialRaw = analysisResult?.analisis_social || {};
 
   const renderProgressBar = (percentage, colorTheme) => {
