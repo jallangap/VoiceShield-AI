@@ -2,13 +2,10 @@ import React, { useState, useEffect, useContext } from 'react';
 import { StyleSheet, Text, View, ActivityIndicator, Alert } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 
-// Importamos el Contexto de Autenticación de la API
 import { AuthProvider, AuthContext } from './context/AuthContext';
 
-// Importamos las funciones limpias de la API
 import { checkBackendHealth, uploadForensicAudio } from './services/api';
 
-// Importación de tus pantallas
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen'; 
 import MainScreen from './screens/MainScreen';
@@ -21,11 +18,9 @@ function NavigationApp() {
   const [isGuest, setIsGuest] = useState(false);
   const [audioAnalizedCount, setAudioAnalizedCount] = useState(0);
   
-  // Estados para el archivo físico y la respuesta del servidor
   const [selectedFile, setSelectedFile] = useState(null);
   const [analysisResult, setAnalysisResult] = useState(null);
   
-  // Modificado: Ahora controla el texto dinámico del motor en ejecución
   const [loadingStatus, setLoadingStatus] = useState(""); 
   const [serverOnline, setServerOnline] = useState(false);
 
@@ -127,9 +122,9 @@ function NavigationApp() {
     setLoadingStatus("🎙️ Motor 1: Evaluando biometría acústica artificial...");
     
     const statusIntervals = [
-      setTimeout(() => setLoadingStatus("🧠 Motor 2: Transcribiendo flujo de audio con Whisper Neural..."), 1800),
-      setTimeout(() => setLoadingStatus("📡 Motor 3: Buscando patrones conversacionales de Ingeniería Social..."), 3500),
-      setTimeout(() => setLoadingStatus("📊 Motor 4: Generando matrices de riesgo global y Ley de Benford..."), 5200)
+      setTimeout(() => setLoadingStatus("🧠 Motor 2: Transcribiendo flujo de audio con Whisper Neural..."), 3800),
+      setTimeout(() => setLoadingStatus("📡 Motor 3: Buscando patrones conversacionales de Ingeniería Social..."), 3800),
+      setTimeout(() => setLoadingStatus("📊 Motor 4: Generando matrices de riesgo global..."), 3800)
     ];
 
     try {

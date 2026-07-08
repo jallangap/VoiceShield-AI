@@ -5,7 +5,6 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 export const AUTH_API_URL = 'http://10.1.6.165:3000/api'; 
 export const FORENSIC_API_URL = 'http://10.1.6.165:8000';
 
-// Cliente Axios para autenticación y peticiones estándar
 const apiClient = axios.create({
   baseURL: AUTH_API_URL,
   headers: {
@@ -13,7 +12,6 @@ const apiClient = axios.create({
   },
 });
 
-// Interceptor para inyectar automáticamente el JWT si existe
 apiClient.interceptors.request.use(
   async (config) => {
     const token = await AsyncStorage.getItem('userToken');
@@ -25,9 +23,7 @@ apiClient.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-/**
- * Verifica el estado de salud del motor de IA
- */
+
 export const checkBackendHealth = async () => {
   try {
     const response = await fetch(`${FORENSIC_API_URL}/`);
@@ -38,12 +34,10 @@ export const checkBackendHealth = async () => {
 };
 
 /**
- * Envía el archivo binario al motor forense de FastAPIs
  */
 export const uploadForensicAudio = async (selectedFile, userId) => {
   const formData = new FormData();
 
-  // Compatibilidad nativa e híbrida (Web / Android / iOS)
   if (
     selectedFile.uri.startsWith('blob:') ||
     selectedFile.uri.startsWith('data:') ||
@@ -60,7 +54,6 @@ export const uploadForensicAudio = async (selectedFile, userId) => {
     });
   }
 
-  // Si existe usuario registrado, se anexa para la persistencia relacional
   if (userId) {
     formData.append('usuario_id', String(userId));
   }

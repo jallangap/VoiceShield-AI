@@ -35,7 +35,7 @@ export default function RegisterScreen({ setCurrentScreen }) {
       <TextInput 
         style={styles.input} 
         placeholder="Nombre completo" 
-        placeholderTextColor="#94A3B8" // Gris suave relajante
+        placeholderTextColor="#94A3B8" 
         value={nombre}
         onChangeText={setNombre}
         autoCapitalize="words"
@@ -74,7 +74,6 @@ export default function RegisterScreen({ setCurrentScreen }) {
 }
 
 const styles = StyleSheet.create({
-  // Fondo azul grisáceo claro, relajante y limpio
   container: { 
     flex: 1, 
     justifyContent: 'center', 
@@ -86,7 +85,6 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 8,
   },
-  // Título en Azul Oscuro Profundo
   title: { 
     fontSize: 26, 
     fontWeight: 'bold', 
@@ -94,7 +92,6 @@ const styles = StyleSheet.create({
     textAlign: 'center', 
     color: '#0F172A' 
   },
-  // Subtítulo de cuidado personal
   subtitle: {
     fontSize: 14,
     color: '#64748B',
@@ -102,7 +99,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     lineHeight: 20
   },
-  // Inputs claros con fondo blanco, bordes suaves y texto oscuro
   input: { 
     borderWidth: 1, 
     borderColor: '#CBD5E1', 
@@ -118,7 +114,6 @@ const styles = StyleSheet.create({
     shadowRadius: 2,
     elevation: 1,
   },
-  // Botón: Azul Oscuro con texto en Blanco Puro para denotar protección institucional
   button: { 
     backgroundColor: '#1E293B', 
     padding: 16, 
@@ -136,7 +131,6 @@ const styles = StyleSheet.create({
     fontSize: 16, 
     fontWeight: 'bold' 
   },
-  // Enlace en Azul Corporativo de alta nitidez
   linkText: { 
     color: '#2563EB', 
     marginTop: 28, 

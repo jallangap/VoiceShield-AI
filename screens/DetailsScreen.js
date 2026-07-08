@@ -2,7 +2,6 @@ import React from 'react';
 import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
 
 export default function DetailsScreen({ analysisResult, setCurrentScreen }) {
-  // Extracción exhaustiva de las métricas mapeadas desde el backend
   const metricas = analysisResult?.metricas || {};
   const transcripcion = analysisResult?.transcripcion_whisper || '';
   const forense = analysisResult?.analisis_forense || {};
@@ -11,7 +10,6 @@ export default function DetailsScreen({ analysisResult, setCurrentScreen }) {
   const recomendaciones = analysisResult?.recomendaciones_seguridad || [];
   const analisisSocialRaw = analysisResult?.analisis_social || {};
 
-  // Función utilitaria para renderizar barras de progreso elegantes
   const renderProgressBar = (percentage, colorTheme) => {
     const validPercent = Math.max(0, min(percentage || 0, 100));
     return (
@@ -21,14 +19,12 @@ export default function DetailsScreen({ analysisResult, setCurrentScreen }) {
     );
   };
 
-  // Helper para acotar límites numéricos de forma segura
   function min(a, b) { return a > b ? b : a; }
 
-  // Determinar colores basados en severidad
   const getSeverityColor = (score) => {
-    if (score >= 75) return '#DC2626'; // Crítico - Rojo
-    if (score >= 45) return '#D97706'; // Medio - Ámbar
-    return '#16A34A'; // Bajo - Verde
+    if (score >= 75) return '#DC2626'; 
+    if (score >= 45) return '#D97706'; 
+    return '#16A34A';
   };
 
   const globalColor = getSeverityColor(metricas.riesgo_global);
@@ -246,7 +242,6 @@ const styles = StyleSheet.create({
   headerTitle: { fontSize: 16, fontWeight: '800', color: '#0F172A', letterSpacing: 0.3 },
   scrollContent: { padding: 16 },
   
-  // Estructura Base de Tarjetas Elegantes
   card: { 
     backgroundColor: '#FFFFFF', 
     borderRadius: 16, 
@@ -261,7 +256,6 @@ const styles = StyleSheet.create({
   cardContextLabel: { fontSize: 10, fontWeight: '800', color: '#94A3B8', letterSpacing: 1.2, marginBottom: 2 },
   mainGlobalTitle: { fontSize: 19, fontWeight: '800', color: '#0F172A', marginBottom: 16 },
   
-  // Diseño del Veredicto Circular Global
   globalContainer: { flexDirection: 'row', alignItems: 'center', marginBottom: 14 },
   globalCircularBadge: { 
     width: 85, 
@@ -278,11 +272,9 @@ const styles = StyleSheet.create({
   veredictoLabel: { fontSize: 11, fontWeight: '700', color: '#64748B', letterSpacing: 0.5 },
   veredictoValue: { fontSize: 16, fontWeight: '800', marginTop: 2 },
   
-  // Caja de Recomendaciones
   recoContainer: { backgroundColor: '#F8FAFC', borderRadius: 12, padding: 14, marginTop: 12, borderWidth: 1, borderColor: '#E2E8F0' },
   recoItem: { fontSize: 12.5, color: '#334155', lineHeight: 18, marginTop: 6, fontWeight: '500' },
 
-  // Encabezados Internos de Motores
   rowHeader: { flexDirection: 'row', alignItems: 'center' },
   motorIcon: { fontSize: 24, marginRight: 12 },
   sectionTitle: { fontSize: 15, fontWeight: '800', color: '#0F172A' },
@@ -290,7 +282,6 @@ const styles = StyleSheet.create({
   innerSectionTitle: { fontSize: 13, fontWeight: '800', color: '#1E293B', marginBottom: 10, marginTop: 14, letterSpacing: 0.2 },
   divider: { height: 1, backgroundColor: '#F1F5F9', marginVertical: 14 },
   
-  // Barras de Progreso Lineales Estilizadas
   metricRowBlock: { marginBottom: 12 },
   metricRowHeader: { flexDirection: 'row', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 },
   metricLabelLarge: { fontSize: 13, fontWeight: '700', color: '#475569' },
@@ -299,19 +290,16 @@ const styles = StyleSheet.create({
   progressFill: { height: '100%', borderRadius: 4 },
   conclucionTexto: { fontSize: 12, color: '#64748B', fontStyle: 'italic', marginTop: 4 },
 
-  // Cuadrícula Métrica Modular (Efecto Dashboard)
   gridContainer: { flexDirection: 'row', flexWrap: 'wrap', marginHorizontal: -4, marginTop: 4 },
   gridItem: { width: '50%', padding: 4 },
   gridLabel: { fontSize: 11, color: '#64748B', fontWeight: '500' },
   gridValue: { fontSize: 12.5, fontWeight: '700', color: '#0F172A', marginTop: 1, backgroundColor: '#F8FAFC', padding: 8, borderRadius: 8, borderWidth: 1, borderColor: '#E2E8F0' },
 
-  // Bloques de Tácticas NLP
   tacticaRowBlock: { marginBottom: 10 },
   tacticaInfoRow: { flexDirection: 'row', justifyContent: 'space-between', marginBottom: 3 },
   tacticaLabelText: { fontSize: 12.5, color: '#334155', textTransform: 'capitalize', fontWeight: '600' },
   tacticaValueText: { fontSize: 12.5, color: '#64748B', fontWeight: '700' },
   
-  // Elementos Complementarios y Cajas de Texto
   transcriptBox: { backgroundColor: '#F8FAFC', padding: 14, borderRadius: 12, marginTop: 12, borderWidth: 1, borderColor: '#E2E8F0' },
   transcriptText: { fontStyle: 'italic', color: '#334155', lineHeight: 20, fontSize: 13.5 },
   warningBox: { backgroundColor: '#FFFBEB', borderColor: '#FEF3C7', borderWidth: 1, borderRadius: 10, padding: 10, marginTop: 14 },

@@ -73,7 +73,6 @@ export default function LoginScreen({
 }
 
 const styles = StyleSheet.create({
-  // Fondo azul grisáceo claro, relajante y limpio
   container: { 
     flex: 1, 
     justifyContent: 'center', 
@@ -86,7 +85,6 @@ const styles = StyleSheet.create({
     marginBottom: 8,
     color: '#1E293B'
   },
-  // Título en Azul Oscuro profundo, transmite seriedad y calma
   title: { 
     fontSize: 26, 
     fontWeight: 'bold', 
@@ -94,7 +92,6 @@ const styles = StyleSheet.create({
     textAlign: 'center', 
     color: '#0F172A' 
   },
-  // Subtítulo de cuidado personal
   subtitle: {
     fontSize: 14,
     color: '#64748B',
@@ -102,7 +99,6 @@ const styles = StyleSheet.create({
     marginBottom: 32,
     lineHeight: 20
   },
-  // Inputs claros con fondo blanco, bordes suaves y texto oscuro
   input: { 
     borderWidth: 1, 
     borderColor: '#CBD5E1', 
@@ -112,14 +108,12 @@ const styles = StyleSheet.create({
     color: '#1E293B', 
     backgroundColor: '#FFFFFF',
     fontSize: 15,
-    // Sutil sombra para dar profundidad limpia
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
     shadowOpacity: 0.05,
     shadowRadius: 2,
     elevation: 1,
   },
-  // Botón principal: Azul Oscuro/Pizarra Profesional con texto en Blanco Puro
   button: { 
     backgroundColor: '#1E293B', 
     padding: 16, 
@@ -137,7 +131,6 @@ const styles = StyleSheet.create({
     fontSize: 16, 
     fontWeight: 'bold' 
   },
-  // Botón de invitado: Fondo blanco limpio con borde Azul Tranquilo
   guestButton: { 
     backgroundColor: '#FFFFFF', 
     borderWidth: 1.5, 
@@ -150,7 +143,6 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold'
   },
-  // Enlace inferior en un Azul Corporativo/Tranquilo que invita a la acción de forma serena
   linkText: { 
     color: '#2563EB', 
     marginTop: 28, 
