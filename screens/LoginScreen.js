@@ -1,9 +1,9 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, Image } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 
-export default function LoginScreen({ 
-  email, 
+export default function LoginScreen({
+  email,
   setEmail, 
   password, 
   setPassword, 
@@ -12,36 +12,49 @@ export default function LoginScreen({
   setCurrentScreen 
 }) {
   const { loginUser } = useContext(AuthContext);
+  const [errorMessage, setErrorMessage] = useState('');
 
   const onLoginPress = async () => {
     if (!email || !password) {
-      Alert.alert('Error', 'Por favor llena todos los campos.');
+      const emptyFieldsMessage = 'Por favor llena todos los campos.';
+      setErrorMessage(emptyFieldsMessage);
+      Alert.alert('Error', emptyFieldsMessage);
       return;
     }
 
+    setErrorMessage('');
+
     const result = await loginUser(email, password);
-    if (result.success) {
+    if (result && result.success) {
       Alert.alert('¡Éxito!', 'Inicio de sesión correcto.');
       handleLogin(); 
     } else {
-      Alert.alert('Error', result.error);
+      const fallbackError = result && result.error ? result.error : 'No se pudo iniciar sesión. Verifica tus credenciales.';
+      
+      setErrorMessage(fallbackError);
+      Alert.alert('Error', fallbackError);
     }
   };
 
   return (
     <View style={styles.container}>
-      {/* Icono de seguridad integrado sutilmente para evocar cuidado */}
-      <Text style={styles.securityIcon}>🛡️</Text>
+      <Image 
+        source={require('../assets/GuardIAn.png')} 
+        style={styles.logo}
+        resizeMode="contain"
+      />
       
-      <Text style={styles.title}>Iniciar Sesión</Text>
-      <Text style={styles.subtitle}>Tu espacio seguro de protección y cuidado personal</Text>
+      <Text style={styles.subtitle}>Analiza quién habla y cómo intenta influenciarte</Text>
       
       <TextInput 
         style={styles.input} 
         placeholder="Correo electrónico" 
-        placeholderTextColor="#94A3B8" // Gris pizarra suave y legible
+        placeholderTextColor="#64748B" 
         value={email}
-        onChangeText={setEmail}
+        onChangeText={(text) => {
+          setEmail(text);
+          if (errorMessage) setErrorMessage('');
+        }}
         autoCapitalize="none"
         keyboardType="email-address"
       />
@@ -49,18 +62,25 @@ export default function LoginScreen({
       <TextInput 
         style={styles.input} 
         placeholder="Contraseña" 
-        placeholderTextColor="#94A3B8"
+        placeholderTextColor="#64748B"
         value={password}
-        onChangeText={setPassword}
+        onChangeText={(text) => {
+          setPassword(text);
+          if (errorMessage) setErrorMessage('');
+        }}
         secureTextEntry
       />
 
-      {/* Botón principal en Azul Oscuro Profesional */}
+      {errorMessage ? (
+        <View style={styles.errorContainer}>
+          <Text style={styles.errorText}>⚠️ {errorMessage}</Text>
+        </View>
+      ) : null}
+
       <TouchableOpacity style={styles.button} onPress={onLoginPress}>
         <Text style={styles.buttonText}>Ingresar Seguro</Text>
       </TouchableOpacity>
 
-      {/* Botón secundario de invitado con un borde Azul Tranquilo */}
       <TouchableOpacity style={[styles.button, styles.guestButton]} onPress={handleGuestAccess}>
         <Text style={styles.guestButtonText}>Ingresar como Invitado</Text>
       </TouchableOpacity>
@@ -77,54 +97,51 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'center', 
     padding: 24, 
-    backgroundColor: '#F4F7FC' 
+    backgroundColor: '#1E293B' 
   },
-  securityIcon: {
-    fontSize: 44,
-    textAlign: 'center',
-    marginBottom: 8,
-    color: '#1E293B'
-  },
-  title: { 
-    fontSize: 26, 
-    fontWeight: 'bold', 
-    marginBottom: 6, 
-    textAlign: 'center', 
-    color: '#0F172A' 
+  logo: {
+    width: '100%',
+    height: 180, 
+    alignSelf: 'center',
+    marginBottom: 20,
   },
   subtitle: {
-    fontSize: 14,
-    color: '#64748B',
+    fontSize: 16,
+    color: '#CBD5E1', 
     textAlign: 'center',
-    marginBottom: 32,
-    lineHeight: 20
+    marginBottom: 36,
+    lineHeight: 22,
   },
   input: { 
-    borderWidth: 1, 
-    borderColor: '#CBD5E1', 
-    padding: 14, 
-    borderRadius: 12, 
+    borderWidth: 1.5, 
+    borderColor: '#475569', 
+    padding: 16, 
+    borderRadius: 8, 
     marginBottom: 16, 
-    color: '#1E293B', 
-    backgroundColor: '#FFFFFF',
-    fontSize: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+    color: '#FFFFFF', 
+    backgroundColor: '#0F172A', 
+    fontSize: 16,
+  },
+  errorContainer: {
+    backgroundColor: '#451A23', 
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 16,
+    borderWidth: 1,
+    borderColor: '#EF4444', 
+  },
+  errorText: {
+    color: '#FCA5A5', 
+    fontSize: 14,
+    fontWeight: '600',
+    textAlign: 'center',
   },
   button: { 
-    backgroundColor: '#1E293B', 
+    backgroundColor: '#0A42BA', 
     padding: 16, 
-    borderRadius: 12, 
+    borderRadius: 8, 
     alignItems: 'center', 
-    marginTop: 8,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
+    marginTop: 4, 
   },
   buttonText: { 
     color: '#FFFFFF', 
@@ -132,22 +149,21 @@ const styles = StyleSheet.create({
     fontWeight: 'bold' 
   },
   guestButton: { 
-    backgroundColor: '#FFFFFF', 
-    borderWidth: 1.5, 
-    borderColor: '#3B82F6', 
-    marginTop: 14,
-    shadowOpacity: 0.05,
+    backgroundColor: 'transparent', 
+    borderWidth: 2, 
+    borderColor: '#D297FD', 
+    marginTop: 16,
   },
   guestButtonText: { 
-    color: '#3B82F6', 
+    color: '#D297FD', 
     fontSize: 16,
     fontWeight: 'bold'
   },
   linkText: { 
-    color: '#2563EB', 
-    marginTop: 28, 
+    color: '#38BDF8', 
+    marginTop: 32, 
     textAlign: 'center',
     fontWeight: '600',
-    fontSize: 14
+    fontSize: 15
   }
 });

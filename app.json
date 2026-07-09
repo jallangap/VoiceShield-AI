@@ -1,7 +1,7 @@
 {
   "expo": {
-    "name": "mi-app-seguridad",
-    "slug": "mi-app-seguridad",
+    "name": "GuardIAn APP",
+    "slug": "GuardIAn App",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",

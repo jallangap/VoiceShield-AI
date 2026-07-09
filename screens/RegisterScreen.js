@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert } from 'react-native';
+import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, Image } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 
 export default function RegisterScreen({ setCurrentScreen }) {
@@ -26,8 +26,12 @@ export default function RegisterScreen({ setCurrentScreen }) {
 
   return (
     <View style={styles.container}>
-      {/* Icono superior que evoca paz y protección */}
-      <Text style={styles.securityIcon}>🍃</Text>
+      {/* Integración de tu logo oficial en lugar del icono de hojas */}
+      <Image 
+        source={require('../assets/GuardIAn.png')} 
+        style={styles.logo}
+        resizeMode="contain"
+      />
 
       <Text style={styles.title}>Crear Cuenta</Text>
       <Text style={styles.subtitle}>Regístrate para mantener un historial seguro de tus análisis</Text>
@@ -35,7 +39,7 @@ export default function RegisterScreen({ setCurrentScreen }) {
       <TextInput 
         style={styles.input} 
         placeholder="Nombre completo" 
-        placeholderTextColor="#94A3B8" 
+        placeholderTextColor="#64748B" 
         value={nombre}
         onChangeText={setNombre}
         autoCapitalize="words"
@@ -44,7 +48,7 @@ export default function RegisterScreen({ setCurrentScreen }) {
       <TextInput 
         style={styles.input} 
         placeholder="Correo electrónico" 
-        placeholderTextColor="#94A3B8"
+        placeholderTextColor="#64748B"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
@@ -54,7 +58,7 @@ export default function RegisterScreen({ setCurrentScreen }) {
       <TextInput 
         style={styles.input} 
         placeholder="Contraseña" 
-        placeholderTextColor="#94A3B8"
+        placeholderTextColor="#64748B"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
@@ -78,35 +82,36 @@ const styles = StyleSheet.create({
     flex: 1, 
     justifyContent: 'center', 
     padding: 24, 
-    backgroundColor: '#F4F7FC' 
+    backgroundColor: '#1E293B' 
   },
-  securityIcon: {
-    fontSize: 44,
-    textAlign: 'center',
-    marginBottom: 8,
+  logo: {
+    width: '100%',
+    height: 130, 
+    alignSelf: 'center',
+    marginBottom: 16,
   },
   title: { 
     fontSize: 26, 
     fontWeight: 'bold', 
     marginBottom: 6, 
     textAlign: 'center', 
-    color: '#0F172A' 
+    color: '#FFFFFF' 
   },
   subtitle: {
     fontSize: 14,
-    color: '#64748B',
+    color: '#CBD5E1',
     textAlign: 'center',
     marginBottom: 32,
     lineHeight: 20
   },
   input: { 
-    borderWidth: 1, 
-    borderColor: '#CBD5E1', 
+    borderWidth: 1.5, 
+    borderColor: '#475569', 
     padding: 14, 
     borderRadius: 12, 
     marginBottom: 16, 
-    color: '#1E293B', 
-    backgroundColor: '#FFFFFF',
+    color: '#FFFFFF', 
+    backgroundColor: '#0F172A', 
     fontSize: 15,
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 1 },
@@ -115,7 +120,7 @@ const styles = StyleSheet.create({
     elevation: 1,
   },
   button: { 
-    backgroundColor: '#1E293B', 
+    backgroundColor: '#0A42BA', 
     padding: 16, 
     borderRadius: 12, 
     alignItems: 'center', 
@@ -132,7 +137,7 @@ const styles = StyleSheet.create({
     fontWeight: 'bold' 
   },
   linkText: { 
-    color: '#2563EB', 
+    color: '#38BDF8', 
     marginTop: 28, 
     textAlign: 'center',
     fontWeight: '600',

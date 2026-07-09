@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, Alert } from 'react-native';
+import { StyleSheet, Text, View, ActivityIndicator, Alert, Image } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
 
 import { AuthProvider, AuthContext } from './context/AuthContext';
@@ -36,7 +36,7 @@ function NavigationApp() {
         } else {
           setCurrentScreen('LOGIN');
         }
-      }, 3000);
+      }, 1500); 
       return () => clearTimeout(timer);
     }
   }, [currentScreen, loading, token]);
@@ -118,14 +118,20 @@ function NavigationApp() {
       return;
     }
 
-    // Cambios secuenciales simulados antes de disparar la petición HTTP
-    setLoadingStatus("🎙️ Motor 1: Evaluando biometría acústica artificial...");
-    
-    const statusIntervals = [
-      setTimeout(() => setLoadingStatus("🧠 Motor 2: Transcribiendo flujo de audio con Whisper Neural..."), 3800),
-      setTimeout(() => setLoadingStatus("📡 Motor 3: Buscando patrones conversacionales de Ingeniería Social..."), 3800),
-      setTimeout(() => setLoadingStatus("📊 Motor 4: Generando matrices de riesgo global..."), 3800)
+    const mensajesModelos = [
+      "🎙️ Motor 1: Evaluando biometría acústica artificial...",
+      "🧠 Motor 2: Transcribiendo flujo de audio con Whisper Neural...",
+      "📡 Motor 3: Buscando patrones conversacionales de Ingeniería Social...",
+      "📊 Motor 4: Generando matrices de riesgo global..."
     ];
+
+    let index = 0;
+    setLoadingStatus(mensajesModelos[index]);
+
+    const intervalId = setInterval(() => {
+      index = (index + 1) % mensajesModelos.length;
+      setLoadingStatus(mensajesModelos[index]);
+    }, 3500);
 
     try {
       const userIdToSend = (!isGuest && user?.id) ? user.id : null;
@@ -141,7 +147,7 @@ function NavigationApp() {
         error.message || 'No se pudo establecer comunicación con el motor forense.'
       );
     } finally {
-      statusIntervals.forEach(clearTimeout);
+      clearInterval(intervalId);
       setLoadingStatus("");
     }
   };
@@ -149,12 +155,15 @@ function NavigationApp() {
   if (currentScreen === 'SPLASH') {
     return (
       <View style={styles.splashContainer}>
-        <View style={styles.logoBadge}>
-          <Text style={styles.logoIcon}>🛡️</Text>
-        </View>
-        <Text style={styles.splashTitle}>GuardIAn</Text>
+        {/* Renderizado oficial del isotipo en lugar del badge plano anterior */}
+        <Image 
+          source={require('./assets/GuardIAn.png')} 
+          style={styles.splashLogo}
+          resizeMode="contain"
+        />
         <Text style={styles.splashSubtitle}>Detección de Ingeniería Social</Text>
-        <ActivityIndicator size="small" color="#3B82F6" style={{ marginTop: 30 }} />
+        {/* Cambiado por el color celeste brillante del logotipo para contraste premium */}
+        <ActivityIndicator size="small" color="#38BDF8" style={{ marginTop: 32 }} />
       </View>
     );
   }
@@ -218,34 +227,22 @@ export default function App() {
 const styles = StyleSheet.create({
   splashContainer: { 
     flex: 1, 
-    backgroundColor: '#F4F7FC', 
+    backgroundColor: '#1E293B', 
     justifyContent: 'center', 
-    alignItems: 'center' 
+    alignItems: 'center',
+    padding: 24,
   },
-  logoBadge: { 
-    width: 100, 
-    height: 100, 
-    borderRadius: 50, 
-    backgroundColor: '#FFFFFF', 
-    justifyContent: 'center', 
-    alignItems: 'center', 
-    borderWidth: 1.5, 
-    borderColor: '#CBD5E1', 
-    marginBottom: 20,
-    elevation: 2,
-  },
-  logoIcon: { 
-    fontSize: 48 
-  },
-  splashTitle: { 
-    fontSize: 32, 
-    fontWeight: 'bold', 
-    color: '#0F172A',
-    letterSpacing: 1
+  splashLogo: {
+    width: '80%',
+    height: 160,
+    alignSelf: 'center',
   },
   splashSubtitle: { 
     fontSize: 15, 
-    color: '#64748B', 
-    marginTop: 8 
+    color: '#94A3B8', 
+    marginTop: 12,
+    fontWeight: '500',
+    letterSpacing: 0.5,
+    textAlign: 'center'
   }
 });
