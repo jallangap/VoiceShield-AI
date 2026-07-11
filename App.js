@@ -1,15 +1,24 @@
 import React, { useState, useEffect, useContext } from 'react';
-import { StyleSheet, Text, View, ActivityIndicator, Alert, Image } from 'react-native';
 import * as DocumentPicker from 'expo-document-picker';
-
 import { AuthProvider, AuthContext } from './context/AuthContext';
-
 import { checkBackendHealth, uploadForensicAudio } from './services/api';
-
 import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen'; 
 import MainScreen from './screens/MainScreen';
 import DetailsScreen from './screens/DetailsScreen';
+import { useFonts } from 'expo-font';
+import {
+  Sora_400Regular,
+  Sora_700Bold,
+} from '@expo-google-fonts/sora';
+import {
+  StyleSheet,
+  Text,
+  View,
+  ActivityIndicator,
+  Alert,
+  ImageBackground,
+} from 'react-native';
 
 function NavigationApp() {
   const { token, loading, user, logoutUser } = useContext(AuthContext);
@@ -36,7 +45,7 @@ function NavigationApp() {
         } else {
           setCurrentScreen('LOGIN');
         }
-      }, 1500); 
+      }, 2500); 
       return () => clearTimeout(timer);
     }
   }, [currentScreen, loading, token]);
@@ -153,21 +162,34 @@ function NavigationApp() {
   };
 
   if (currentScreen === 'SPLASH') {
-    return (
-      <View style={styles.splashContainer}>
-        {/* Renderizado oficial del isotipo en lugar del badge plano anterior */}
-        <Image 
-          source={require('./assets/GuardIAn.png')} 
-          style={styles.splashLogo}
-          resizeMode="contain"
-        />
-        <Text style={styles.splashSubtitle}>Detección de Ingeniería Social</Text>
-        {/* Cambiado por el color celeste brillante del logotipo para contraste premium */}
-        <ActivityIndicator size="small" color="#38BDF8" style={{ marginTop: 32 }} />
-      </View>
-    );
-  }
+  return (
+    <ImageBackground
+      source={require('./assets/login-bg2.jpg')}
+      style={styles.splashContainer}
+      resizeMode="cover"
+    >
+      <View style={styles.splashOverlay}>
 
+        <Text style={styles.splashTitle}>
+          Guard
+          <Text style={styles.splashTitleIA}>IA</Text>
+          n
+        </Text>
+
+        <Text style={styles.splashSubtitle}>
+          Detección de Ingeniería Social
+        </Text>
+
+        <ActivityIndicator
+          size="small"
+          color="#FFFFFF"
+          style={{ marginTop: 35 }}
+        />
+
+      </View>
+    </ImageBackground>
+  );
+}
   if (currentScreen === 'LOGIN') {
     return (
       <LoginScreen 
@@ -187,36 +209,45 @@ function NavigationApp() {
     );
   }
 
-  if (currentScreen === 'MAIN') {
-    return (
-      <MainScreen 
-        pickDocument={pickDocument}
-        uploadAudio={uploadAudio}
-        selectedFile={selectedFile}
-        analysisResult={analysisResult}
-        loading={!!loadingStatus}
-        loadingStatus={loadingStatus}
-        handleLogout={handleLogout}
-        userData={!isGuest ? user : null} 
-        setCurrentScreen={setCurrentScreen} 
-        serverOnline={serverOnline}
-      />
-    );
-  }
+ if (currentScreen === 'MAIN') {
+  return (
+    <MainScreen
+      pickDocument={pickDocument}
+      uploadAudio={uploadAudio}
+      selectedFile={selectedFile}
+      analysisResult={analysisResult}
+      loading={!!loadingStatus}
+      loadingStatus={loadingStatus}
+      handleLogout={handleLogout}
+      userData={!isGuest ? user : null}
+      setCurrentScreen={setCurrentScreen}
+      serverOnline={serverOnline}
+    />
+  );
+}
 
-  if (currentScreen === 'DETAILS') {
-    return (
-      <DetailsScreen 
-        analysisResult={analysisResult} 
-        setCurrentScreen={setCurrentScreen} 
-      />
-    );
-  }
+if (currentScreen === 'DETAILS') {
+  return (
+    <DetailsScreen
+      analysisResult={analysisResult}
+      setCurrentScreen={setCurrentScreen}
+    />
+  );
+}
 
-  return null;
+return null; 
 }
 
 export default function App() {
+  const [fontsLoaded] = useFonts({
+    Sora_400Regular,
+    Sora_700Bold,
+  });
+
+  if (!fontsLoaded) {
+    return null;
+  }
+
   return (
     <AuthProvider>
       <NavigationApp />
@@ -225,24 +256,34 @@ export default function App() {
 }
 
 const styles = StyleSheet.create({
-  splashContainer: { 
-    flex: 1, 
-    backgroundColor: '#1E293B', 
-    justifyContent: 'center', 
-    alignItems: 'center',
-    padding: 24,
-  },
-  splashLogo: {
-    width: '80%',
-    height: 160,
-    alignSelf: 'center',
-  },
-  splashSubtitle: { 
-    fontSize: 15, 
-    color: '#94A3B8', 
-    marginTop: 12,
-    fontWeight: '500',
-    letterSpacing: 0.5,
-    textAlign: 'center'
-  }
+  splashContainer: {
+  flex: 1,
+},
+
+splashOverlay: {
+  flex: 1,
+  backgroundColor: 'rgba(0,0,0,0.45)',
+  justifyContent: 'center',
+  alignItems: 'center',
+  paddingHorizontal: 25,
+},
+
+splashTitle: {
+  fontSize: 52,
+  color: '#FFFFFF',
+  fontFamily: 'Sora_700Bold',
+},
+
+splashTitleIA: {
+  color: '#C62828',
+  fontFamily: 'Sora_700Bold',
+},
+
+splashSubtitle: {
+  marginTop: 12,
+  fontSize: 17,
+  color: '#FFFFFF',
+  fontFamily: 'Sora_400Regular',
+  textAlign: 'center',
+}
 });

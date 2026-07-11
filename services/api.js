@@ -2,8 +2,8 @@ import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
 // Configuración de endpoints centrales
-export const AUTH_API_URL = 'http://10.1.6.165:3000/api'; 
-export const FORENSIC_API_URL = 'http://10.1.6.165:8000';
+export const AUTH_API_URL = 'http://192.168.100.7:3000/api'; 
+export const FORENSIC_API_URL = 'http://192.168.100.7:8000';
 
 const apiClient = axios.create({
   baseURL: AUTH_API_URL,

@@ -1,6 +1,14 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ActivityIndicator, ScrollView } from 'react-native';
-
+import BottomNavigation from "../components/BottomNavigation";
+import {
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  ActivityIndicator,
+  ScrollView,
+  ImageBackground,
+} from 'react-native';
 const THEME = {
   color: {
     bg: '#1E293B',
@@ -13,8 +21,8 @@ const THEME = {
     textMuted: '#64748B',
     onDark: '#FFFFFF',
     onDarkMuted: '#94A3B8',
-    primary: '#38BDF8',
-    primaryDeep: '#0A42BA',
+    primary: '#D62828',
+    primaryDeep: '#B91C1C',
     primarySoft: '#1E293B',
     primaryBorder: '#334155',
     success: '#10B981',
@@ -52,22 +60,32 @@ export default function MainScreen({
   const recentHistory = history.slice(0, 3);
 
   return (
-    <View style={styles.container}>
+  <ImageBackground
+    source={require('../assets/login-bg3.jpg')}
+    style={styles.container}
+    resizeMode="cover"
+  >
+    <View style={styles.overlay}>
       {/* HEADER */}
       <View style={styles.header}>
-        <View style={styles.userInfo}>
-          <Text style={styles.eyebrow}>SESIÓN ACTIVA</Text>
-          <Text style={styles.welcomeText}>
-            {userData ? `Hola, ${userData.nombre}` : 'Modo Invitado'}
-          </Text>
-          <Text style={styles.headerSubtitle}>
-            {userData ? 'Tu historial se guardará de forma segura' : 'Análisis temporal activo'}
-          </Text>
-        </View>
-        <TouchableOpacity style={styles.logoutButton} onPress={handleLogout} activeOpacity={0.7}>
-          <Text style={styles.logoutText}>Salir</Text>
-        </TouchableOpacity>
-      </View>
+  <View style={styles.userInfo}>
+    <Text style={styles.eyebrow}>SESIÓN ACTIVA</Text>
+    <Text style={styles.welcomeText}>
+      {userData ? `Hola, ${userData.nombre}` : 'Modo Invitado'}
+    </Text>
+    <Text style={styles.headerSubtitle}>
+      {userData ? 'Tu historial se guardará de forma segura' : 'Análisis temporal activo'}
+    </Text>
+  </View>
+
+  <TouchableOpacity
+    style={styles.logoutButton}
+    onPress={handleLogout}
+    activeOpacity={0.7}
+  >
+    <Text style={styles.logoutText}>Salir</Text>
+  </TouchableOpacity>
+</View>
 
       <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
         
@@ -101,20 +119,44 @@ export default function MainScreen({
           )}
 
           <TouchableOpacity
-            style={[styles.analyzeButton, (!selectedFile || loading) && styles.disabledButton]}
-            onPress={uploadAudio}
-            disabled={!selectedFile || loading}
-            activeOpacity={0.85}
-          >
-            {loading ? (
-              <View style={styles.loadingWrapper}>
-                <ActivityIndicator color={THEME.color.onDark} size="small" style={{ marginBottom: 6 }} />
-                <Text style={styles.loadingStatusText}>{loadingStatus}</Text>
-              </View>
-            ) : (
-              <Text style={styles.analyzeButtonText}>Iniciar Verificación Segura</Text>
-            )}
-          </TouchableOpacity>
+  style={[
+    styles.analyzeButton,
+    (!selectedFile || loading) && styles.disabledButton
+  ]}
+  onPress={uploadAudio}
+  disabled={!selectedFile || loading}
+  activeOpacity={0.85}
+>
+  {loading ? (
+    <View
+      style={{
+        flexDirection: 'row',
+        alignItems: 'center',
+        justifyContent: 'center',
+      }}
+    >
+      <ActivityIndicator
+        color="#FFFFFF"
+        size="small"
+        style={{ marginRight: 10 }}
+      />
+
+      <Text style={styles.analyzeButtonText}>
+        Analizando...
+      </Text>
+    </View>
+  ) : (
+    <Text style={styles.analyzeButtonText}>
+      Analizar Audio
+    </Text>
+  )}
+</TouchableOpacity>
+
+{loading && (
+  <Text style={styles.analysisStatus}>
+    {loadingStatus}
+  </Text>
+)}
         </View>
 
         {/* VEREDICTO DINÁMICO */}
@@ -243,47 +285,87 @@ export default function MainScreen({
           </View>
         )}
       </ScrollView>
+
+      <BottomNavigation
+  currentScreen="MAIN"
+  setCurrentScreen={setCurrentScreen}
+  handleLogout={handleLogout}
+/>
     </View>
+  </ImageBackground>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: THEME.color.bg },
+  container: {
+    flex:1,
+},
+overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.55)',
+},
   header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: THEME.space.xxl,
-    paddingTop: 56,
-    paddingBottom: THEME.space.lg,
-    backgroundColor: THEME.color.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.color.border,
-  },
-  userInfo: { flex: 1 },
-  eyebrow: { fontSize: 10, fontWeight: '800', color: THEME.color.primary, letterSpacing: 1.5, marginBottom: 4 },
-  eyebrowCenter: { fontSize: 11, fontWeight: '800', color: THEME.color.primary, letterSpacing: 1.5, textAlign: 'center', marginBottom: THEME.space.md },
-  welcomeText: { fontSize: 22, fontWeight: '700', color: THEME.color.textPrimary, letterSpacing: -0.3 },
-  headerSubtitle: { fontSize: 13, color: THEME.color.textSecondary, marginTop: 2 },
-  logoutButton: { paddingVertical: 8, paddingHorizontal: 16, borderRadius: THEME.radius.sm, backgroundColor: THEME.color.surfaceAlt, borderWidth: 1, borderColor: THEME.color.border },
-  logoutText: { color: THEME.color.textPrimary, fontWeight: '600', fontSize: 13 },
-  scrollContent: { padding: THEME.space.xxl },
-  card: { backgroundColor: THEME.color.surface, borderRadius: THEME.radius.lg, padding: THEME.space.xxl, marginBottom: THEME.space.xl, borderWidth: 1, borderColor: THEME.color.border, ...THEME.shadow },
+  paddingTop: 60,
+  paddingHorizontal: 26,
+  paddingBottom: 25,
+  flexDirection: 'row',
+  justifyContent: 'space-between',
+  alignItems: 'flex-start',
+},
+  userInfo: { flex: 1 ,justifyContent: 'center'},
+  eyebrow: { fontSize: 13, fontWeight: '800', color: '#D62828', letterSpacing: 1.5, marginBottom: 8 },
+  eyebrowCenter: { fontSize: 13, fontWeight: '800', color: '#E53935', letterSpacing: 3, textAlign: 'center', marginBottom: 10 },
+  welcomeText: { fontSize: 34, fontWeight: '800', fontFamily: 'Sora_700Bold',color: '#FFFFFF', letterSpacing: -0.3 },
+  headerSubtitle: { fontSize: 17, color: '#9CA3AF', marginTop: 4 },
+  logoutButton: { paddingVertical: 12, paddingHorizontal: 24, borderRadius: 30, backgroundColor: 'rgba(0,0,0,0.15)', borderWidth: 1, borderColor: '#D62828' },
+  logoutText: { color: '#FFFFFF', fontWeight: '700', fontSize: 15 },
+  scrollContent: { paddingHorizontal: 22, paddingBottom: 40 },
+  card: { backgroundColor: '#171717', borderRadius: 28, padding: 24, marginBottom: 8, borderWidth: 1, borderColor: 'rgba(255,255,255,0.08)', ...THEME.shadow },
   cardTitleRow: { flexDirection: 'row', alignItems: 'flex-start' },
   iconBadge: { width: 40, height: 40, borderRadius: THEME.radius.sm, backgroundColor: THEME.color.surfaceAlt, alignItems: 'center', justifyContent: 'center', marginRight: THEME.space.md, borderWidth: 1, borderColor: THEME.color.border },
   iconBadgeText: { fontSize: 18 },
   cardTitle: { fontSize: 18, fontWeight: '700', color: THEME.color.textPrimary, marginBottom: 4, letterSpacing: -0.2 },
   cardDescription: { fontSize: 13.5, color: THEME.color.textSecondary, lineHeight: 20 },
-  pickButton: { backgroundColor: THEME.color.surfaceAlt, paddingVertical: 14, borderRadius: THEME.radius.sm, alignItems: 'center', marginTop: THEME.space.xl, marginBottom: THEME.space.md, borderWidth: 1, borderColor: THEME.color.border },
-  pickButtonText: { color: THEME.color.primary, fontWeight: '600', fontSize: 14 },
+  pickButton: { backgroundColor: '#18181B', paddingVertical: 15, borderRadius: 14 , alignItems: 'center', marginTop: THEME.space.xl, marginBottom: THEME.space.md, borderWidth: 2, borderColor: '#D62828' },
+  pickButtonText: { color: '#FFFFFF', fontFamily: 'Sora_700Bold', fontSize: 15 },
   fileContainer: { flexDirection: 'row', alignItems: 'center', backgroundColor: THEME.color.surfaceAlt, paddingVertical: 10, paddingHorizontal: 12, borderRadius: THEME.radius.sm, marginBottom: THEME.space.lg, borderWidth: 1, borderColor: THEME.color.border },
   fileDot: { width: 6, height: 6, borderRadius: 3, backgroundColor: THEME.color.success, marginRight: 9 },
   fileName: { color: THEME.color.textPrimary, fontSize: 13, fontWeight: '500', flex: 1 },
-  analyzeButton: { backgroundColor: THEME.color.primaryDeep, paddingVertical: 16, borderRadius: THEME.radius.sm, alignItems: 'center' },
-  analyzeButtonText: { color: THEME.color.onDark, fontWeight: '600', fontSize: 15 },
-  disabledButton: { backgroundColor: '#475569' },
-  loadingWrapper: { alignItems: 'center', width: '100%' },
-  loadingStatusText: { color: THEME.color.onDarkMuted, fontSize: 12, textAlign: 'center', fontWeight: '400', marginTop: 4 },
+  analyzeButton:{
+    backgroundColor:'#D62828',
+
+    borderRadius:35,
+
+    height:62,
+
+    justifyContent:'center',
+
+    alignItems:'center',
+
+    marginTop:10,
+
+    shadowColor:'#D62828',
+
+    shadowOpacity:0.45,
+
+    shadowRadius:12,
+
+    shadowOffset:{
+        width:0,
+        height:6,
+    },
+
+    elevation:10,
+},
+  analyzeButtonText: { color: '#FFFFFF', fontWeight: '700', fontSize: 15,fontFamily:'Sora_700Bold',letterSpacing:0.3 },
+  disabledButton: { backgroundColor: '#D62828', },
+  analysisStatus: {
+  color: '#B0B7C3',
+  fontSize: 13,
+  textAlign: 'center',
+  marginTop: 16,
+  lineHeight: 20,
+},
   riskBadge: { flexDirection: 'row', alignItems: 'center', justifyContent: 'center', paddingVertical: 12, borderRadius: THEME.radius.sm, marginBottom: THEME.space.lg, borderWidth: 1 },
   badgeSuccess: { backgroundColor: THEME.color.successSoft, borderColor: THEME.color.successBorder },
   badgeDanger: { backgroundColor: THEME.color.dangerSoft, borderColor: THEME.color.dangerBorder },

@@ -1,18 +1,18 @@
 import React from 'react';
-import { StyleSheet, Text, TouchableOpacity, View, ScrollView } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity, View, ScrollView, ImageBackground } from 'react-native';
 
 // PALETA INSTITUCIONAL OSCURA INTEGRADA (GuardIAn)
 const THEME = {
   color: {
-    bg: '#1E293B', 
-    surface: '#0F172A',     
-    surfaceAlt: '#1E293B',  
-    border: '#334155',     
+    bg: '#000000', 
+    surface: '#171717',     
+    surfaceAlt: '#232323',  
+    border: '#DDDDDD',     
     borderSoft: '#1E293B',
 
     textPrimary: '#FFFFFF', 
-    textSecondary: '#94A3B8', 
-    textMuted: '#64748B',
+    textSecondary: '#C5C5C5', 
+    textMuted: '#8A8A8A',
     onDark: '#FFFFFF',
 
     primary: '#38BDF8',  
@@ -57,13 +57,22 @@ export default function DetailsScreen({ analysisResult, setCurrentScreen }) {
   const analisisSocialRaw = analysisResult?.analisis_social || {};
 
   const renderProgressBar = (percentage, colorTheme) => {
-    const validPercent = Math.max(0, Math.min(percentage || 0, 100));
-    return (
-      <View style={styles.progressTrack}>
-        <View style={[styles.progressFill, { width: `${validPercent}%`, backgroundColor: colorTheme }]} />
-      </View>
-    );
-  };
+  const validPercent = Math.max(0, Math.min(percentage || 0, 100));
+
+  return (
+    <View style={styles.progressTrack}>
+      <View
+        style={[
+          styles.progressFill,
+          {
+            width: `${validPercent}%`,
+            backgroundColor: colorTheme,
+          },
+        ]}
+      />
+    </View>
+  );
+};
 
   const getSeverityColor = (score) => {
     if (score >= 75) return THEME.color.danger;
@@ -74,17 +83,31 @@ export default function DetailsScreen({ analysisResult, setCurrentScreen }) {
   const globalColor = getSeverityColor(metricas.riesgo_global);
 
   return (
-    <View style={styles.container}>
-      {/* HEADER */}
-      <View style={styles.header}>
-        <TouchableOpacity style={styles.backButton} onPress={() => setCurrentScreen('MAIN')} activeOpacity={0.7}>
-          <Text style={styles.backButtonText}>← Volver</Text>
-        </TouchableOpacity>
-        <Text style={styles.headerTitle}>Informe Pericial Avanzado</Text>
-        <View style={{ width: 75 }} />
-      </View>
+    <ImageBackground
+    source={require("../assets/login-bg3.jpg")}
+    style={styles.container}
+    resizeMode="cover"
+  >
+    <View style={styles.overlay}>
 
-      <ScrollView contentContainerStyle={styles.scrollContent} showsVerticalScrollIndicator={false}>
+  <ScrollView
+    contentContainerStyle={styles.scrollContent}
+    showsVerticalScrollIndicator={false}
+  >
+
+    <View style={styles.header}>
+      <TouchableOpacity
+        style={styles.backButton}
+        onPress={() => setCurrentScreen('MAIN')}
+        activeOpacity={0.7}
+      >
+        <Text style={styles.backButtonText}>← Volver</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.headerTitle}>
+        Informe Pericial Avanzado
+      </Text>
+    </View>
 
         {/* SECCIÓN 1: DICTAMEN INTEGRADO GLOBAL */}
         <View style={[styles.card, { borderLeftWidth: 4, borderLeftColor: globalColor }]}>
@@ -249,56 +272,92 @@ export default function DetailsScreen({ analysisResult, setCurrentScreen }) {
           </View>
         </View>
 
-        {/* SECCIÓN 5: TRANSCRIPCIÓN LITERAL */}
-        <View style={styles.card}>
-          <Text style={styles.sectionTitle}>Transcripción Estructural de Evidencia</Text>
-          <Text style={styles.sectionSubtitle}>Texto decodificado mediante el motor Whisper</Text>
-          <View style={styles.transcriptBox}>
-            <Text style={styles.transcriptText}>
-              {transcripcion ? `"${transcripcion}"` : 'No se recuperaron muestras legibles de habla.'}
-            </Text>
-          </View>
-        </View>
+       {/* SECCIÓN 5: TRANSCRIPCIÓN LITERAL */}
+<View style={styles.card}>
+  <Text style={styles.sectionTitle}>
+    Transcripción Estructural de Evidencia
+  </Text>
 
-      </ScrollView>
-    </View>
-  );
+  <Text style={styles.sectionSubtitle}>
+    Texto decodificado mediante el motor Whisper
+  </Text>
+
+  <View
+    style={[
+      styles.transcriptBox,
+      {
+        maxHeight: 1000,
+      },
+    ]}
+  >
+    <ScrollView
+      showsVerticalScrollIndicator={true}
+      nestedScrollEnabled={true}
+    >
+      <Text style={styles.transcriptText}>
+        {transcripcion
+          ? `"${transcripcion}"`
+          : "No se recuperaron muestras legibles de habla."}
+      </Text>
+    </ScrollView>
+  </View>
+</View>
+
+</ScrollView>
+</View>
+</ImageBackground>
+);
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: THEME.color.bg },
-  header: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    paddingHorizontal: THEME.space.xl,
-    paddingTop: 54,
-    paddingBottom: THEME.space.xl,
-    backgroundColor: THEME.color.surface,
-    borderBottomWidth: 1,
-    borderBottomColor: THEME.color.border,
-  },
-  backButton: {
-    paddingVertical: 8,
-    paddingHorizontal: 14,
-    borderRadius: THEME.radius.sm,
-    backgroundColor: THEME.color.surfaceAlt,
-    borderWidth: 1,
-    borderColor: THEME.color.border,
-  },
-  backButtonText: { color: THEME.color.primary, fontWeight: '600', fontSize: 13 },
-  headerTitle: { fontSize: 16, fontWeight: '700', color: THEME.color.textPrimary, letterSpacing: -0.2 },
-  scrollContent: { padding: THEME.space.xl },
+  container: { flex: 1, backgroundColor: 'rgba(0,0,0,.45)'},
+  header:{
+    flexDirection:'row',
+    alignItems:'center',
+    paddingTop:60,
+    paddingHorizontal:24,
+    paddingBottom:20,
+},
+  backButton:{
+    width:115,
+    height:50,
+    borderRadius:16,
+    justifyContent:'center',
+    alignItems:'center',
 
-  card: {
-    backgroundColor: THEME.color.surface,
-    borderRadius: THEME.radius.lg,
-    padding: THEME.space.xxl,
-    marginBottom: THEME.space.xl,
-    borderWidth: 1,
-    borderColor: THEME.color.border,
-    ...THEME.shadow,
-  },
+    backgroundColor:'rgba(20,20,20,.95)',
+
+    borderWidth:1.5,
+    borderColor:'#D92B2B',
+},
+  backButtonText: { color: '#FFFFFF', fontWeight: '600', fontSize: 13 },
+  headerTitle:{
+    flex:1,
+    marginLeft:18,
+    fontSize:28,
+    fontWeight:'800',
+    color:'#FFF',
+},
+  scrollContent: { paddingHorizontal:22,paddingBottom:0,paddingTop:15, },
+
+  card:{
+    backgroundColor:'#171717',
+
+    borderRadius:28,
+
+    padding:24,
+
+    marginBottom:26,
+
+    borderWidth:1,
+
+    borderColor:'#2A2A2A',
+
+    shadowColor:'#000',
+    shadowOpacity:.4,
+    shadowRadius:18,
+    elevation:10,
+},
   cardContextLabel: { fontSize: 10, fontWeight: '800', color: THEME.color.primary, letterSpacing: 1.5, marginBottom: 4 },
   mainGlobalTitle: { fontSize: 18, fontWeight: '700', color: THEME.color.textPrimary, marginBottom: THEME.space.lg },
 
@@ -383,22 +442,19 @@ const styles = StyleSheet.create({
   tacticaValueText: { fontSize: 13, color: THEME.color.textSecondary, fontWeight: '600' },
 
   transcriptBox: {
-    backgroundColor: THEME.color.surfaceAlt,
-    padding: THEME.space.lg,
-    borderRadius: THEME.radius.sm,
-    marginTop: THEME.space.md,
-    borderWidth: 1,
-    borderColor: THEME.color.border,
-  },
-  transcriptText: { fontStyle: 'italic', color: THEME.color.textSecondary, lineHeight: 20, fontSize: 13.5 },
-  warningBox: {
-    backgroundColor: THEME.color.warningSoft,
-    borderColor: THEME.color.warningBorder,
-    borderWidth: 1,
-    borderRadius: THEME.radius.sm,
-    padding: THEME.space.md,
-    marginTop: THEME.space.lg,
-  },
+  backgroundColor: '#232323',
+  borderRadius: 18,
+  padding: 18,
+  marginTop: 18,
+  borderWidth: 1,
+  borderColor: '#3A3A3A',
+},
+  transcriptText: {
+  color: '#E8E8E8',
+  fontSize: 17,
+  lineHeight: 30,
+  fontStyle: 'italic',
+},
   warningText: { fontSize: 11.5, color: THEME.color.warning, lineHeight: 16, fontWeight: '500' },
   noDataText: { fontSize: 12.5, fontStyle: 'italic', color: THEME.color.textSecondary, paddingVertical: 4 },
 });

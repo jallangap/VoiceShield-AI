@@ -1,6 +1,15 @@
 import React, { useContext, useState } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, Image } from 'react-native';
 import { AuthContext } from '../context/AuthContext';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Alert,
+  Image,
+  ImageBackground,
+} from 'react-native';
 
 export default function LoginScreen({
   email,
@@ -36,20 +45,30 @@ export default function LoginScreen({
     }
   };
 
-  return (
-    <View style={styles.container}>
-      <Image 
-        source={require('../assets/GuardIAn.png')} 
+return (
+  <ImageBackground
+    source={require("../assets/login-bg.jpg")}
+    style={styles.background}
+    resizeMode="cover"
+  >
+    <View style={styles.overlay}>
+
+      <Image
+      
         style={styles.logo}
-        resizeMode="contain"
+        resizeMode="stretch"
       />
-      
-      <Text style={styles.subtitle}>Analiza quién habla y cómo intenta influenciarte</Text>
-      
-      <TextInput 
-        style={styles.input} 
-        placeholder="Correo electrónico" 
-        placeholderTextColor="#64748B" 
+
+      <Text style={styles.title}>
+  Guard
+  <Text style={styles.titleIA}>IA</Text>
+  n
+</Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Correo electrónico"
+        placeholderTextColor="#555"
         value={email}
         onChangeText={(text) => {
           setEmail(text);
@@ -59,10 +78,10 @@ export default function LoginScreen({
         keyboardType="email-address"
       />
 
-      <TextInput 
-        style={styles.input} 
-        placeholder="Contraseña" 
-        placeholderTextColor="#64748B"
+      <TextInput
+        style={styles.input}
+        placeholder="Contraseña"
+        placeholderTextColor="#555"
         value={password}
         onChangeText={(text) => {
           setPassword(text);
@@ -73,97 +92,139 @@ export default function LoginScreen({
 
       {errorMessage ? (
         <View style={styles.errorContainer}>
-          <Text style={styles.errorText}>⚠️ {errorMessage}</Text>
+          <Text style={styles.errorText}>
+            ⚠️ {errorMessage}
+          </Text>
         </View>
       ) : null}
 
-      <TouchableOpacity style={styles.button} onPress={onLoginPress}>
-        <Text style={styles.buttonText}>Ingresar Seguro</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onLoginPress}
+      >
+        <Text style={styles.buttonText}>
+          Ingresar 
+        </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity style={[styles.button, styles.guestButton]} onPress={handleGuestAccess}>
-        <Text style={styles.guestButtonText}>Ingresar como Invitado</Text>
+      <TouchableOpacity
+        style={styles.guestButton}
+        onPress={handleGuestAccess}
+      >
+        <Text style={styles.guestButtonText}>
+          Continuar como invitado
+        </Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => setCurrentScreen('REGISTER')}>
-        <Text style={styles.linkText}>¿No tienes cuenta? Regístrate de forma segura aquí</Text>
+      <TouchableOpacity
+        onPress={() => setCurrentScreen('REGISTER')}
+      >
+        <Text style={styles.linkText}>
+          ¿No tienes cuenta? Crear cuenta
+        </Text>
       </TouchableOpacity>
+
     </View>
-  );
+  </ImageBackground>
+);
 }
-
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    padding: 24, 
-    backgroundColor: '#1E293B' 
+  background: {
+    flex: 1,
   },
-  logo: {
-    width: '100%',
-    height: 180, 
-    alignSelf: 'center',
-    marginBottom: 20,
+
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 25,
   },
+
+  title: {
+    fontSize: 50,
+    color: '#FFFFFF',
+    textAlign: 'center',
+    fontFamily: 'Sora_700Bold',
+    marginBottom: 300,
+     marginTop: -50
+  },
+  titleIA: {
+  color: '#D32F2F', // Rojo
+  fontFamily: 'Sora_700Bold',
+},
+
   subtitle: {
-    fontSize: 16,
-    color: '#CBD5E1', 
+    color: '#FFFFFF',
     textAlign: 'center',
-    marginBottom: 36,
-    lineHeight: 22,
-  },
-  input: { 
-    borderWidth: 1.5, 
-    borderColor: '#475569', 
-    padding: 16, 
-    borderRadius: 8, 
-    marginBottom: 16, 
-    color: '#FFFFFF', 
-    backgroundColor: '#0F172A', 
     fontSize: 16,
+    marginTop: 10,
+    marginBottom: 30,
+    fontFamily: 'Sora_400Regular',
   },
+
+  input: {
+    width: '100%',
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    borderRadius: 15,
+    padding: 16,
+    marginBottom: 15,
+    fontSize: 16,
+    color: '#000000',          // ← texto que escribes
+    fontFamily: 'Sora_400Regular',
+  },
+
+  button: {
+    width: '100%',
+    height: 55,
+    backgroundColor: '#C62828', // rojo
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 10,
+  },
+
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontFamily: 'Sora_700Bold',
+  },
+
+  guestButton: {
+    width: '100%',
+    height: 55,
+    borderWidth: 2,
+    borderColor: '#FFFFFF',
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 15,
+  },
+
+  guestButtonText: {
+    color: '#FFFFFF',
+    fontSize: 16,
+    fontFamily: 'Sora_700Bold',
+  },
+
+  linkText: {
+    color: '#FFFFFF',
+    textAlign: 'center',
+    marginTop: 25,
+    fontFamily: 'Sora_400Regular',
+  },
+
   errorContainer: {
-    backgroundColor: '#451A23', 
+    width: '100%',
+    backgroundColor: 'rgba(255,255,255,0.9)',
+    borderRadius: 12,
     padding: 12,
-    borderRadius: 8,
-    marginBottom: 16,
-    borderWidth: 1,
-    borderColor: '#EF4444', 
+    marginBottom: 15,
   },
+
   errorText: {
-    color: '#FCA5A5', 
-    fontSize: 14,
-    fontWeight: '600',
+    color: '#C62828',
     textAlign: 'center',
+    fontFamily: 'Sora_400Regular',
   },
-  button: { 
-    backgroundColor: '#0A42BA', 
-    padding: 16, 
-    borderRadius: 8, 
-    alignItems: 'center', 
-    marginTop: 4, 
-  },
-  buttonText: { 
-    color: '#FFFFFF', 
-    fontSize: 16, 
-    fontWeight: 'bold' 
-  },
-  guestButton: { 
-    backgroundColor: 'transparent', 
-    borderWidth: 2, 
-    borderColor: '#D297FD', 
-    marginTop: 16,
-  },
-  guestButtonText: { 
-    color: '#D297FD', 
-    fontSize: 16,
-    fontWeight: 'bold'
-  },
-  linkText: { 
-    color: '#38BDF8', 
-    marginTop: 32, 
-    textAlign: 'center',
-    fontWeight: '600',
-    fontSize: 15
-  }
 });

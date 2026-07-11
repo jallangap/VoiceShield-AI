@@ -1,5 +1,13 @@
 import React, { useState, useContext } from 'react';
-import { StyleSheet, Text, TextInput, TouchableOpacity, View, Alert, Image } from 'react-native';
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+  Alert,
+  ImageBackground,
+} from 'react-native';
 import { AuthContext } from '../context/AuthContext';
 
 export default function RegisterScreen({ setCurrentScreen }) {
@@ -25,122 +33,128 @@ export default function RegisterScreen({ setCurrentScreen }) {
   };
 
   return (
-    <View style={styles.container}>
-      {/* Integración de tu logo oficial en lugar del icono de hojas */}
-      <Image 
-        source={require('../assets/GuardIAn.png')} 
-        style={styles.logo}
-        resizeMode="contain"
-      />
+  <ImageBackground
+    source={require("../assets/login-bg.jpg")}
+    style={styles.background}
+    resizeMode="cover"
+  >
+    <View style={styles.overlay}>
 
-      <Text style={styles.title}>Crear Cuenta</Text>
-      <Text style={styles.subtitle}>Regístrate para mantener un historial seguro de tus análisis</Text>
+      <Text style={styles.title}>
+        Crear Cuenta
+      </Text>
 
-      <TextInput 
-        style={styles.input} 
-        placeholder="Nombre completo" 
-        placeholderTextColor="#64748B" 
+      <Text style={styles.subtitle}>
+        Regístrate para comenzar a protegerte
+      </Text>
+
+      <TextInput
+        style={styles.input}
+        placeholder="Nombre completo"
+        placeholderTextColor="#555"
         value={nombre}
         onChangeText={setNombre}
-        autoCapitalize="words"
       />
-      
-      <TextInput 
-        style={styles.input} 
-        placeholder="Correo electrónico" 
-        placeholderTextColor="#64748B"
+
+      <TextInput
+        style={styles.input}
+        placeholder="Correo electrónico"
+        placeholderTextColor="#555"
         value={email}
         onChangeText={setEmail}
         autoCapitalize="none"
         keyboardType="email-address"
       />
 
-      <TextInput 
-        style={styles.input} 
-        placeholder="Contraseña" 
-        placeholderTextColor="#64748B"
+      <TextInput
+        style={styles.input}
+        placeholder="Contraseña"
+        placeholderTextColor="#555"
         value={password}
         onChangeText={setPassword}
         secureTextEntry
       />
 
-      {/* Botón principal unificado en Azul Oscuro Profesional */}
-      <TouchableOpacity style={styles.button} onPress={onRegisterPress}>
-        <Text style={styles.buttonText}>Registrarse Seguro</Text>
+      <TouchableOpacity
+        style={styles.button}
+        onPress={onRegisterPress}
+      >
+        <Text style={styles.buttonText}>
+          Registrarse
+        </Text>
       </TouchableOpacity>
 
-      {/* Enlace inferior en Azul de calma */}
-      <TouchableOpacity onPress={() => setCurrentScreen('LOGIN')}>
-        <Text style={styles.linkText}>¿Ya tienes cuenta? Inicia sesión aquí</Text>
+      <TouchableOpacity
+        onPress={() => setCurrentScreen("LOGIN")}
+      >
+        <Text style={styles.linkText}>
+          ¿Ya tienes cuenta? Inicia sesión
+        </Text>
       </TouchableOpacity>
+
     </View>
-  );
+  </ImageBackground>
+);
 }
-
 const styles = StyleSheet.create({
-  container: { 
-    flex: 1, 
-    justifyContent: 'center', 
-    padding: 24, 
-    backgroundColor: '#1E293B' 
+  background: {
+    flex: 1,
   },
-  logo: {
-    width: '100%',
-    height: 130, 
-    alignSelf: 'center',
-    marginBottom: 16,
+
+  overlay: {
+    flex: 1,
+    backgroundColor: 'rgba(0,0,0,0.45)',
+    justifyContent: 'center',
+    alignItems: 'center',
+    paddingHorizontal: 25,
   },
-  title: { 
-    fontSize: 26, 
-    fontWeight: 'bold', 
-    marginBottom: 6, 
-    textAlign: 'center', 
-    color: '#FFFFFF' 
+
+  title: {
+    fontSize: 38,
+    color: '#FFFFFF',
+    fontFamily: 'Sora_700Bold',
+    marginBottom: 10,
   },
+
   subtitle: {
-    fontSize: 14,
-    color: '#CBD5E1',
+    color: '#FFFFFF',
     textAlign: 'center',
-    marginBottom: 32,
-    lineHeight: 20
+    marginBottom: 35,
+    fontSize: 16,
+    fontFamily: 'Sora_400Regular',
   },
-  input: { 
-    borderWidth: 1.5, 
-    borderColor: '#475569', 
-    padding: 14, 
-    borderRadius: 12, 
-    marginBottom: 16, 
-    color: '#FFFFFF', 
-    backgroundColor: '#0F172A', 
-    fontSize: 15,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 1 },
-    shadowOpacity: 0.05,
-    shadowRadius: 2,
-    elevation: 1,
+
+  input: {
+    width: '100%',
+    backgroundColor: 'rgba(255,255,255,0.95)',
+    borderRadius: 15,
+    padding: 16,
+    marginBottom: 16,
+    fontSize: 16,
+    color: '#000',
+    fontFamily: 'Sora_400Regular',
   },
-  button: { 
-    backgroundColor: '#0A42BA', 
-    padding: 16, 
-    borderRadius: 12, 
-    alignItems: 'center', 
+
+  button: {
+    width: '100%',
+    height: 55,
+    backgroundColor: '#C62828',
+    borderRadius: 28,
+    justifyContent: 'center',
+    alignItems: 'center',
     marginTop: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 3,
-    elevation: 2,
   },
-  buttonText: { 
-    color: '#FFFFFF', 
-    fontSize: 16, 
-    fontWeight: 'bold' 
+
+  buttonText: {
+    color: '#FFFFFF',
+    fontSize: 17,
+    fontFamily: 'Sora_700Bold',
   },
-  linkText: { 
-    color: '#38BDF8', 
-    marginTop: 28, 
+
+  linkText: {
+    color: '#FFFFFF',
+    marginTop: 30,
     textAlign: 'center',
-    fontWeight: '600',
-    fontSize: 14
-  }
+    fontFamily: 'Sora_400Regular',
+  },
 });
