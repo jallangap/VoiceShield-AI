@@ -1,9 +1,8 @@
 import axios from 'axios';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-// Configuración de endpoints centrales
 export const AUTH_API_URL = 'http://192.168.100.7:3000/api'; 
-export const FORENSIC_API_URL = 'http://192.168.100.7:8000';
+export const FORENSIC_API_URL = 'https://guidable-sierra-renovator.ngrok-free.dev';
 
 const apiClient = axios.create({
   baseURL: AUTH_API_URL,
@@ -35,7 +34,7 @@ export const checkBackendHealth = async () => {
 
 /**
  */
-export const uploadForensicAudio = async (selectedFile, userId) => {
+export const uploadForensicAudio = async (selectedFile, userId, origen = null, telegramChatId = null) => {
   const formData = new FormData();
 
   if (
@@ -56,6 +55,17 @@ export const uploadForensicAudio = async (selectedFile, userId) => {
 
   if (userId) {
     formData.append('usuario_id', String(userId));
+  }
+  
+  if (origen) {
+    formData.append('tipo_origen', origen);
+  } else {
+    // Si no se especifica, por retrocompatibilidad enviamos un string vacío o whatsapp por defecto.
+    formData.append('tipo_origen', 'microfono');
+  }
+  
+  if (telegramChatId) {
+    formData.append('telegram_chat_id', telegramChatId);
   }
 
   const response = await fetch(`${FORENSIC_API_URL}/api/v1/analisis/forense`, {

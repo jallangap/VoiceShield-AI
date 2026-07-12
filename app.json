@@ -1,8 +1,9 @@
 {
   "expo": {
     "name": "GuardIAn APP",
-    "slug": "GuardIAn App",
+    "slug": "GuardIAn-App",
     "version": "1.0.0",
+    "scheme": "guardian",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

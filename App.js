@@ -6,6 +6,7 @@ import LoginScreen from './screens/LoginScreen';
 import RegisterScreen from './screens/RegisterScreen'; 
 import MainScreen from './screens/MainScreen';
 import DetailsScreen from './screens/DetailsScreen';
+import WspAnalysisScreen from './screens/WspAnalysisScreen';
 import { useFonts } from 'expo-font';
 import {
   Sora_400Regular,
@@ -144,7 +145,7 @@ function NavigationApp() {
 
     try {
       const userIdToSend = (!isGuest && user?.id) ? user.id : null;
-      const data = await uploadForensicAudio(selectedFile, userIdToSend);
+      const data = await uploadForensicAudio(selectedFile, userIdToSend, "microfono");
 
       setAnalysisResult(data);
       setAudioAnalizedCount(prev => prev + 1);
@@ -222,6 +223,21 @@ function NavigationApp() {
       userData={!isGuest ? user : null}
       setCurrentScreen={setCurrentScreen}
       serverOnline={serverOnline}
+    />
+  );
+}
+
+if (currentScreen === 'WSP_ANALYSIS') {
+  return (
+    <WspAnalysisScreen
+      setCurrentScreen={setCurrentScreen}
+      currentScreen={currentScreen}
+      handleLogout={handleLogout}
+      userId={!isGuest ? user?.id : null}
+      isGuest={isGuest}
+      audioAnalizedCount={audioAnalizedCount}
+      setAudioAnalizedCount={setAudioAnalizedCount}
+      setAnalysisResultGlobal={setAnalysisResult}
     />
   );
 }
