@@ -34,7 +34,7 @@ export default function WspAnalysisScreen({
   const [showRouteHelp, setShowRouteHelp] = useState(false);
   const [showManualInput, setShowManualInput] = useState(false);
 
-  // ESCUCHA DE ENLACES PROFUNDOS
+  // Escuchar enlaces profundos de retorno
   useEffect(() => {
     const handleDeepLink = (event) => {
       if (event.url) analizarUrlRetorno(event.url);
@@ -55,15 +55,15 @@ export default function WspAnalysisScreen({
         if (idDetectado) {
           setTelegramId(idDetectado);
           await AsyncStorage.setItem('telegramChatId', idDetectado);
-          Alert.alert('¡Éxito!', 'Canal de auditoría pericial vinculado.');
+          Alert.alert('¡Sincronizado!', 'Canal de auditoría pericial de Telegram configurado con éxito.');
         }
       }
     } catch (error) {
-      console.error('Error al procesar deep link:', error);
+      console.error('Error en deep link de retorno:', error);
     }
   };
 
-  // Cargar ID almacenado de respaldo
+  // Cargar ID de respaldo de la memoria local
   useEffect(() => {
     const loadTelegramId = async () => {
       try {
@@ -85,8 +85,18 @@ export default function WspAnalysisScreen({
     }
   };
 
-  const handleLinkTelegram = () => {
-    Linking.openURL('https://t.me/GuardIAnCriticBot');
+  const handleLinkTelegram = async () => {
+    try {
+      const url = 'https://t.me/GuardIAnCriticBot';
+      const soportaUrl = await Linking.canOpenURL(url);
+      if (soportaUrl) {
+        await Linking.openURL(url);
+      } else {
+        Alert.alert('Atención', 'No se pudo abrir Telegram de forma directa. Por favor busca al bot manualmente en la app como: @GuardIAnCriticBot');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'Ocurrió una anomalía al intentar invocar la aplicación externa de Telegram.');
+    }
   };
 
   const pickDocument = async () => {
@@ -101,18 +111,18 @@ export default function WspAnalysisScreen({
         setSelectedFile({
           uri: file.uri,
           name: file.name,
-          mimeType: file.mimeType || 'audio/wav',
+          mimeType: file.mimeType || 'audio/ogg',
         });
         setLocalResult(null); 
       }
     } catch (err) {
-      Alert.alert('Error', 'No se pudo seleccionar el archivo.');
+      Alert.alert('Error', 'No se pudo seleccionar el archivo multimedia.');
     }
   };
 
   const uploadWspAudio = async () => {
     if (!selectedFile) {
-      Alert.alert('Atención', 'Por favor selecciona un archivo de audio primero.');
+      Alert.alert('Atención', 'Por favor selecciona un audio multimedia primero.');
       return;
     }
 
@@ -124,8 +134,8 @@ export default function WspAnalysisScreen({
     const mensajesModelos = [
       "Extrayendo archivo multimedia...",
       "Analizando acústica forense...",
-      "Buscando patrones de manipulación...",
-      "Generando veredicto pericial..."
+      "Evaluando rasgos lingüísticos...",
+      "Consolidando reporte en pantalla..."
     ];
 
     let index = 0;
@@ -135,7 +145,7 @@ export default function WspAnalysisScreen({
     const intervalId = setInterval(() => {
       index = (index + 1) % mensajesModelos.length;
       setLoadingStatus(mensajesModelos[index]);
-    }, 3000);
+    }, 2500);
 
     try {
       const telegramIdToSend = telegramId ? telegramId : null;
@@ -145,14 +155,10 @@ export default function WspAnalysisScreen({
       if (setAnalysisResultGlobal) setAnalysisResultGlobal(data);
       setAudioAnalizedCount(prev => prev + 1);
 
-      if (telegramIdToSend) {
-        Alert.alert("Análisis Completo", "Evidencias respaldadas en tu bot de Telegram.");
-      } else {
-        Alert.alert("Análisis Completo", "Resultados listos abajo en pantalla.");
-      }
+      Alert.alert("Análisis Exitoso", "El diagnóstico pericial se ha renderizado abajo.");
     } catch (error) {
       console.error(error);
-      Alert.alert('Error de Red', 'Asegúrate de que tu URL de Ngrok esté activa y guardada en api.js.');
+      Alert.alert('Fallo de Comunicación', error.message || 'Ocurrió un error al contactar al servidor de FastAPI.');
     } finally {
       clearInterval(intervalId);
       setLoading(false);
@@ -162,7 +168,7 @@ export default function WspAnalysisScreen({
 
   return (
     <View style={styles.container}>
-      {/* HEADER CORREGIDO: SE AJUSTA AUTOMÁTICAMENTE A PANTALLAS REDMI */}
+      {/* HEADER CORREGIDO CONTRA DESBORDAMIENTOS EN PANTALLAS REDMI */}
       <View style={styles.header}>
         <View style={styles.headerTitleBox}>
           <Ionicons name="shield-checkmark-sharp" size={24} color="#D62828" />
@@ -175,24 +181,24 @@ export default function WspAnalysisScreen({
         }]}>
           <View style={[styles.dot, { backgroundColor: telegramId ? '#10B981' : '#F59E0B' }]} />
           <Text style={[styles.miniBadgeText, { color: telegramId ? '#10B981' : '#F59E0B' }]}>
-            {telegramId ? 'Vinculado' : 'Sin Vincular'}
+            {telegramId ? 'Telegram: Activo' : 'Telegram: Inactivo'}
           </Text>
         </View>
       </View>
 
-      {/* CONTENEDOR DE SCROLL ELÁSTICO MAESTRO */}
+      {/* ÁREA DE SCROLL INDEPENDIENTE */}
       <ScrollView 
         style={styles.scrollContainer} 
         contentContainerStyle={styles.scrollContent} 
         showsVerticalScrollIndicator={false}
       >
-        {/* SECCIÓN DE INFORMACIÓN DE AUDITORÍA */}
+        {/* PANEL DE CONFIGURACIÓN DE TELEGRAM */}
         <View style={styles.cardInfo}>
           <View style={styles.cardInfoLayout}>
             <View style={styles.cardInfoTextColumn}>
-              <Text style={styles.infoLabel}>Auditoría Externa (Opcional)</Text>
+              <Text style={styles.infoLabel}>Auditoría Remota (Opcional)</Text>
               <Text style={styles.infoDescription}>
-                Vincular el bot permite resguardar copias certificadas de las evidencias de audio de forma segura. El análisis en pantalla funcionará aunque no te vincules.
+                Vincular el bot permite resguardar copias certificadas de los reportes en tu Telegram automáticamente ante riesgos críticos. El análisis en pantalla funcionará aunque no te vincules.
               </Text>
             </View>
             <TouchableOpacity style={styles.btnMiniTelegram} onPress={handleLinkTelegram}>
@@ -201,13 +207,12 @@ export default function WspAnalysisScreen({
             </TouchableOpacity>
           </View>
 
-          {/* Fallback de entrada manual por bloqueo de Expo Go */}
           <TouchableOpacity 
-            style={{ marginTop: 10, alignSelf: 'flex-start' }}
+            style={{ marginTop: 12, alignSelf: 'flex-start' }}
             onPress={() => setShowManualInput(!showManualInput)}
           >
             <Text style={styles.manualToggleText}>
-              {showManualInput ? '▲ Ocultar entrada manual' : '▼ Si falla la vinculación automática, presiona aquí'}
+              {showManualInput ? '▲ Ocultar entrada manual' : '▼ Si usas Expo Go, presiona aquí para guardar tu ID manual'}
             </Text>
           </TouchableOpacity>
 
@@ -223,9 +228,9 @@ export default function WspAnalysisScreen({
           )}
         </View>
 
-        {/* CONTENEDOR DE CONTROL MULTIMEDIA */}
+        {/* CONTENEDOR DE CARGA MULTIMEDIA */}
         <View style={styles.card}>
-          <Text style={styles.cardLabel}>Carga Forense Multimedia</Text>
+          <Text style={styles.cardLabel}>Carga de Archivo de Audio</Text>
           
           <TouchableOpacity style={styles.pickerZone} onPress={pickDocument}>
             <Ionicons 
@@ -234,7 +239,7 @@ export default function WspAnalysisScreen({
               color={selectedFile ? "#10B981" : "#475569"} 
             />
             <Text style={styles.pickerText}>
-              {selectedFile ? selectedFile.name : 'Selecciona una nota de voz o archivo de sonido'}
+              {selectedFile ? selectedFile.name : 'Toca aquí para seleccionar una nota de voz o audio'}
             </Text>
           </TouchableOpacity>
 
@@ -243,15 +248,15 @@ export default function WspAnalysisScreen({
             onPress={() => setShowRouteHelp(!showRouteHelp)}
           >
             <Text style={styles.helpToggleText}>
-              {showRouteHelp ? '▲ Ocultar guía' : '▼ ¿Cómo buscar audios de WhatsApp en mi Redmi?'}
+              {showRouteHelp ? '▲ Ocultar guía' : '▼ ¿Cómo buscar audios de WhatsApp en mi celular?'}
             </Text>
           </TouchableOpacity>
 
           {showRouteHelp && (
             <View style={styles.helpBox}>
-              <Text style={styles.helpText}>1. Al abrirse el explorador, abre el menú lateral izquierdo.</Text>
+              <Text style={styles.helpText}>1. Al abrirse el explorador, despliega el menú lateral izquierdo.</Text>
               <Text style={styles.helpText}>2. Entra a "Almacenamiento Interno".</Text>
-              <Text style={styles.helpText}>3. Sigue la ruta estándar de la comunidad:</Text>
+              <Text style={styles.helpText}>3. Sigue la ruta de carpetas multimedia:</Text>
               <Text style={styles.helpRouteText}>Android → media → com.whatsapp → WhatsApp → Media → WhatsApp Voice Notes</Text>
             </View>
           )}
@@ -275,36 +280,51 @@ export default function WspAnalysisScreen({
           </TouchableOpacity>
         </View>
 
-        {/* TARJETA DE RESPUESTAS CORREGIDA (EVITA EL COLAPSOFLEX) */}
+        {/* INFORME DE RESPUESTA INTEGRADO CON PROTECCIÓN CONTRA PROPIEDADES NULAS */}
         {localResult && (
-          <View style={[styles.resultCard, { borderColor: localResult.metricas.riesgo_global >= 35 ? '#EF4444' : '#10B981' }]}>
-            <View style={[styles.resultHeader, { backgroundColor: localResult.metricas.riesgo_global >= 35 ? '#EF4444' : '#10B981' }]}>
+          <View style={[styles.resultCard, { borderColor: localResult?.metricas?.riesgo_global >= 35 ? '#EF4444' : '#10B981' }]}>
+            <View style={[styles.resultHeader, { backgroundColor: localResult?.metricas?.riesgo_global >= 35 ? '#EF4444' : '#10B981' }]}>
               <Text style={styles.resultHeaderPayload}>
-                {localResult.metricas.riesgo_global >= 35 ? 'DIAGNÓSTICO: ATENCIÓN DE RIESGO' : 'DIAGNÓSTICO: COMPORTAMIENTO SEGURO'}
+                {localResult?.metricas?.riesgo_global >= 35 ? 'DIAGNÓSTICO: ATENCIÓN DE RIESGO' : 'DIAGNÓSTICO: COMPORTAMIENTO SEGURO'}
               </Text>
             </View>
+            
             <View style={styles.resultBody}>
-              <Text style={styles.summaryText}>{localResult.resumen_seguridad}</Text>
+              <Text style={styles.resumenTitle}>RESUMEN RÁPIDO:</Text>
+              <Text style={styles.summaryText}>{localResult?.resumen_seguridad}</Text>
               
-              <View style={styles.miniMetricsBox}>
-                <Text style={styles.metricItemText}>🔬 Probabilidad de Clonación: {localResult.metricas.motor1_voz_ia} de 100</Text>
-                <Text style={styles.metricItemText}>🗣️ Evaluación Acústica: {localResult.metricas.nivel_confianza_voz}</Text>
-                <Text style={styles.metricItemText}>🧠 Alerta de Ingeniería Social: {localResult.metricas.motor3_ingenieria_social} de 100</Text>
-                <Text style={styles.metricItemText}>⚠️ Nivel Unificado Global: {localResult.metricas.nivel}</Text>
+              <Text style={styles.resumenTitle}>TRANSCRIPCIÓN COMPLETA (WHISPER):</Text>
+              <View style={styles.transcriptionBox}>
+                <Text style={styles.transcriptionText}>"{localResult?.transcripcion_whisper}"</Text>
               </View>
 
-              <TouchableOpacity style={styles.btnDetails} onPress={() => setCurrentScreen('DETAILS')}>
-                <Text style={styles.btnDetailsText}>Auditar informe forense detallado →</Text>
-              </TouchableOpacity>
+              <Text style={styles.resumenTitle}>INDICADORES BIOMÉTRICOS DE AUDITORÍA:</Text>
+              <View style={styles.miniMetricsBox}>
+                <Text style={styles.metricItemText}>🔬 Probabilidad de Voz Artificial (Motor 1): {localResult?.metricas?.motor1_voz_ia} de 100</Text>
+                <Text style={styles.metricItemText}>🗣️ Evaluación Física: {localResult?.metricas?.nivel_confianza_voz}</Text>
+                <Text style={styles.metricItemText}>🧠 Alerta de Ingeniería Social (Motor 3): {localResult?.metricas?.motor3_ingenieria_social} de 100</Text>
+                <Text style={styles.metricItemText}>⚠️ Nivel Unificado Global: {localResult?.metricas?.nivel} ({localResult?.metricas?.riesgo_global}/100)</Text>
+              </View>
+
+              {localResult?.recomendaciones_seguridad && localResult?.recomendaciones_seguridad?.length > 0 && (
+                <>
+                  <Text style={styles.resumenTitle}>MEDIDAS DEFENSIVAS EXIGIDAS:</Text>
+                  <View style={styles.recommendationsBox}>
+                    {localResult?.recomendaciones_seguridad?.map((rec, i) => (
+                      <Text key={i} style={styles.recItemText}>• {rec}</Text>
+                    ))}
+                  </View>
+                </>
+              )}
             </View>
           </View>
         )}
 
-        {/* COLCHÓN DE RESPALDO DE ALTURA PARA EVITAR QUE LA BARRA TAPE EL TEXTO */}
+        {/* COLCHÓN DE RESPALDO DE ALTURA */}
         <View style={{ height: 130 }} />
       </ScrollView>
 
-      {/* COMPONENTE TOTALMENTE FIJO EN LA BASE */}
+      {/* BARRA DE NAVEGACIÓN TOTALMENTE FIJA */}
       <BottomNavigation
         currentScreen={currentScreen}
         setCurrentScreen={setCurrentScreen}
@@ -406,7 +426,7 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderColor: '#334155',
     borderRadius: 10,
-    padding: 10,
+    padding: 12,
     marginTop: 10,
     fontSize: 13,
     color: '#FFF',
@@ -521,7 +541,7 @@ const styles = StyleSheet.create({
     borderRadius: 18,
     borderWidth: 1,
     overflow: 'hidden',
-    marginBottom: 10,
+    marginBottom: 20,
   },
   resultHeader: {
     padding: 12,
@@ -534,22 +554,43 @@ const styles = StyleSheet.create({
   },
   resultBody: {
     padding: 18,
-    alignItems: 'center',
+  },
+  resumenTitle: {
+    fontSize: 11,
+    fontFamily: 'Sora_700Bold',
+    color: '#94A3B8',
+    marginBottom: 6,
+    marginTop: 12,
+    letterSpacing: 0.5,
   },
   summaryText: {
-    fontSize: 14,
+    fontSize: 15,
     color: '#FFF',
-    fontFamily: 'Sora_400Regular',
-    textAlign: 'center',
+    fontFamily: 'Sora_700Bold',
     lineHeight: 22,
-    marginBottom: 15,
+    marginBottom: 10,
+  },
+  transcriptionBox: {
+    backgroundColor: '#0F172A',
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: '#1E293B',
+    marginBottom: 10,
+  },
+  transcriptionText: {
+    color: '#E2E8F0',
+    fontSize: 13,
+    fontFamily: 'Sora_400Regular',
+    fontStyle: 'italic',
+    lineHeight: 20,
   },
   miniMetricsBox: {
     backgroundColor: '#0F172A',
     width: '100%',
     padding: 12,
     borderRadius: 10,
-    marginBottom: 15,
+    marginBottom: 10,
     borderWidth: 1,
     borderColor: '#2B354F',
   },
@@ -559,12 +600,18 @@ const styles = StyleSheet.create({
     fontFamily: 'Sora_400Regular',
     marginBottom: 6,
   },
-  btnDetails: {
-    padding: 5,
+  recommendationsBox: {
+    backgroundColor: 'rgba(214, 40, 40, 0.04)',
+    padding: 12,
+    borderRadius: 10,
+    borderWidth: 1,
+    borderColor: 'rgba(214, 40, 40, 0.15)',
   },
-  btnDetailsText: {
-    color: '#3B82F6',
-    fontFamily: 'Sora_700Bold',
-    fontSize: 13,
+  recItemText: {
+    color: '#FDA4AF',
+    fontSize: 12,
+    fontFamily: 'Sora_400Regular',
+    marginBottom: 6,
+    lineHeight: 18,
   }
 });
